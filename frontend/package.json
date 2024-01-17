@@ -1,5 +1,5 @@
 {
-  "name": "@inkathon/frontend",
+  "name": "@aleph-zero-hackathon/frontend",
   "private": true,
   "version": "0.4.2",
   "scripts": {
@@ -19,7 +19,6 @@
     "@azns/resolver-core": "^1.6.0",
     "@azns/resolver-react": "^1.6.0",
     "@hookform/resolvers": "^3.3.4",
-    "@inkathon/contracts": "workspace:*",
     "@polkadot/api": "^10.11.2",
     "@polkadot/api-contract": "^10.11.2",
     "@polkadot/extension-dapp": "^0.46.6",
