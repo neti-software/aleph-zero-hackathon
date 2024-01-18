@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast'
 import { ChainInfo } from '@/components/web3/chain-info'
 import { ConnectButton } from '@/components/web3/connect-button'
 import { GreeterContractInteractions } from '@/components/web3/greeter-contract-interactions'
+import AppBar from '@/components/ui/app-bar'
 
 export default function HomePage() {
   // Display `useInkathon` error messages (optional)
@@ -19,10 +20,8 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="container relative flex grow flex-col items-center justify-center py-10">
-        {/* Connect Wallet Button */}
-        <ConnectButton />
-
+      <AppBar></AppBar>
+      <div className="container relative flex grow flex-col items-center justify-center">
         <div className="mt-12 flex w-full flex-wrap items-start justify-center gap-4">
           {/* Chain Metadata Information */}
           <ChainInfo />
