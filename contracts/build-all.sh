@@ -14,6 +14,7 @@ contracts=($(find $CONTRACTS_DIR -maxdepth 1 -type d -exec test -f {}/Cargo.toml
 # Build all contracts
 for i in "${contracts[@]}"
 do
+  [ "$i" == "test_helpers" ] && continue
   echo -e "\nBuilding '$CONTRACTS_DIR/$i/Cargo.toml'…"
   cargo contract build --release --quiet --manifest-path $CONTRACTS_DIR/$i/Cargo.toml
 
