@@ -38,7 +38,6 @@ pub mod phone_numbers {
         #[rustfmt::skip]
         use super::*;
         #[rustfmt::skip]
-        use ink_e2e::{build_message, PolkadotConfig};
 
         use test_helpers::{address_of, balance_of, owner_of};
 
