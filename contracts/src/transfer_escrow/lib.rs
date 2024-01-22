@@ -3,27 +3,14 @@
 #[ink::contract]
 mod transfer_escrow {
     use ink::storage::Mapping;
+    use ink::prelude::string::String;
 
-    #[ink::storage_item]
-    pub enum RequestStatus {
-        /// Requested by new operator
-        Pending,
-        /// Some(1) - Verified by old operator & token transferred to escrow
-        TokenTransferred,
-        /// Awaiting aproval from both sides
-        AprovalPending,
-        /// Ready for transfer at given block number
-        Ready(u64),
-        /// Transferred successfully
-        Finalized,
-        /// Cancelled or otherwise broken
-        Cancelled,
-    }
-
-    #[ink::storage_item]
+    #[derive(scale::Decode, scale::Encode)]
+    #[cfg_attr(
+        feature = "std",
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+    )]
     pub struct Request {
-        /// Status of the request
-        status: RequestStatus,
         /// Phone number token id associated with the transfer proposal
         token: String,
         /// Previous operator
