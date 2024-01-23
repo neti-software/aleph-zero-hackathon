@@ -19,7 +19,7 @@ test_helpers = { path = "../test_helpers", default-features = false }
 path = "lib.rs"
 
 [features]
-default = ["std", "e2e-tests"]
+default = ["std"]
 std = ["ink/std", "scale/std", "scale-info/std", "openbrush/std"]
 ink-as-dependency = []
 e2e-tests = []

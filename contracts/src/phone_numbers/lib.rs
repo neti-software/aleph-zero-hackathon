@@ -1,19 +1,20 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
+pub use self::phone_numbers::PhoneNumbersRef;
+
 #[openbrush::implementation(PSP34)]
 #[openbrush::contract]
 pub mod phone_numbers {
     use openbrush::traits::Storage;
-
     #[ink(storage)]
     #[derive(Default, Storage)]
-    pub struct Contract {
+    pub struct PhoneNumbers {
         #[storage_field]
         psp34: psp34::Data,
         next_id: u8,
     }
 
-    impl Contract {
+    impl PhoneNumbers {
         #[ink(constructor)]
         pub fn new() -> Self {
             Self::default()
@@ -47,7 +48,7 @@ pub mod phone_numbers {
         async fn return_collection_id_of_account(
             mut client: ink_e2e::Client<C, E>,
         ) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -58,7 +59,7 @@ pub mod phone_numbers {
 
             let expected_collection_id = Id::Bytes(AsRef::<[u8]>::as_ref(&account_id).to_vec());
             let actual_collection_id = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.collection_id());
                 client.call_dry_run(&ink_e2e::alice(), &_msg, 0, None).await
             }
@@ -71,7 +72,7 @@ pub mod phone_numbers {
 
         #[ink_e2e::test]
         async fn returns_total_supply(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -80,7 +81,7 @@ pub mod phone_numbers {
 
             let expected_total_supply = 0;
             let actual_total_supply = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.total_supply());
                 client.call_dry_run(&ink_e2e::alice(), &_msg, 0, None).await
             };
@@ -88,7 +89,7 @@ pub mod phone_numbers {
             assert_eq!(expected_total_supply, actual_total_supply.return_value());
 
             for _ in 0..3 {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 let result = client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -100,7 +101,7 @@ pub mod phone_numbers {
 
             let expected_total_supply = 3;
             let actual_total_supply = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.total_supply());
                 client.call_dry_run(&ink_e2e::alice(), &_msg, 0, None).await
             };
@@ -112,7 +113,7 @@ pub mod phone_numbers {
 
         #[ink_e2e::test]
         async fn transfer_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -120,7 +121,7 @@ pub mod phone_numbers {
                 .account_id;
 
             let mint_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -138,7 +139,7 @@ pub mod phone_numbers {
             assert_eq!(0, balance_of!(client, address, Bob));
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -157,7 +158,7 @@ pub mod phone_numbers {
 
         #[ink_e2e::test]
         async fn approved_transfer_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -165,7 +166,7 @@ pub mod phone_numbers {
                 .account_id;
 
             let mint_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -183,7 +184,7 @@ pub mod phone_numbers {
             assert_eq!(0, balance_of!(client, address, Bob));
 
             let approve_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.approve(address_of!(Bob), Some(Id::U8(0)), true));
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -195,7 +196,7 @@ pub mod phone_numbers {
             assert_eq!(approve_result, Ok(()));
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client
                     .call(&ink_e2e::bob(), _msg, 0, None)
@@ -216,7 +217,7 @@ pub mod phone_numbers {
         async fn approved_operator_transfer_works(
             mut client: ink_e2e::Client<C, E>,
         ) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -224,7 +225,7 @@ pub mod phone_numbers {
                 .account_id;
 
             let mint_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -242,7 +243,7 @@ pub mod phone_numbers {
             assert_eq!(0, balance_of!(client, address, Bob));
 
             let approve_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.approve(address_of!(Bob), None, true));
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -254,7 +255,7 @@ pub mod phone_numbers {
             assert_eq!(approve_result, Ok(()));
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client
                     .call(&ink_e2e::bob(), _msg, 0, None)
@@ -273,7 +274,7 @@ pub mod phone_numbers {
 
         #[ink_e2e::test]
         async fn psp34_transfer_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -281,7 +282,7 @@ pub mod phone_numbers {
                 .account_id;
 
             let mint_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -298,7 +299,7 @@ pub mod phone_numbers {
             );
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -321,7 +322,7 @@ pub mod phone_numbers {
         async fn can_nextot_transfer_non_existing_token(
             mut client: ink_e2e::Client<C, E>,
         ) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -331,7 +332,7 @@ pub mod phone_numbers {
             assert_eq!(balance_of!(client, address, Alice), 0);
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client.call_dry_run(&ink_e2e::alice(), &_msg, 0, None).await
             }
@@ -347,7 +348,7 @@ pub mod phone_numbers {
         async fn cannot_transfer_without_allowance(
             mut client: ink_e2e::Client<C, E>,
         ) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -355,7 +356,7 @@ pub mod phone_numbers {
                 .account_id;
 
             let mint_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.mint_token());
                 client
                     .call(&ink_e2e::alice(), _msg, 0, None)
@@ -367,7 +368,7 @@ pub mod phone_numbers {
             assert_eq!(mint_result, Ok(()));
 
             let transfer_result = {
-                let _msg = build_message::<ContractRef>(address.clone())
+                let _msg = build_message::<PhoneNumbersRef>(address.clone())
                     .call(|contract| contract.transfer(address_of!(Bob), Id::U8(0), vec![]));
                 client.call_dry_run(&ink_e2e::bob(), &_msg, 0, None).await
             }
@@ -382,7 +383,7 @@ pub mod phone_numbers {
 
         #[ink_e2e::test]
         async fn can_mint_any_id(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            let constructor = ContractRef::new();
+            let constructor = PhoneNumbersRef::new();
             let address = client
                 .instantiate("phone_numbers", &ink_e2e::alice(), constructor, 0, None)
                 .await
@@ -402,7 +403,7 @@ pub mod phone_numbers {
 
             for id in ids {
                 let mint_result = {
-                    let _msg = build_message::<ContractRef>(address.clone())
+                    let _msg = build_message::<PhoneNumbersRef>(address.clone())
                         .call(|contract| contract.mint(id.clone()));
                     client
                         .call(&ink_e2e::alice(), _msg, 0, None)

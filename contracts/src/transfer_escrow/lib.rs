@@ -3,7 +3,28 @@
 #[ink::contract]
 mod transfer_escrow {
     use ink::storage::Mapping;
-    use ink::prelude::string::String;
+    use openbrush::contracts::{psp34::Id, traits::psp34::psp34_external::PSP34};
+    use phone_numbers::PhoneNumbersRef;
+
+    #[derive(scale::Decode, scale::Encode)]
+    #[cfg_attr(
+        feature = "std",
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+    )]
+    pub enum RequestStatus {
+        /// Requested by new operator
+        Pending,
+        /// Verified by old operator & token transferred to escrow
+        TokenTransferred,
+        /// Awaiting aproval from both sides
+        AprovalPending,
+        /// Ready for transfer at given block number
+        Ready(u64),
+        /// Transferred successfully
+        Finalized,
+        /// Cancelled or otherwise broken
+        Cancelled,
+    }
 
     #[derive(scale::Decode, scale::Encode)]
     #[cfg_attr(
@@ -12,21 +33,22 @@ mod transfer_escrow {
     )]
     pub struct Request {
         /// Phone number token id associated with the transfer proposal
-        token: String,
+        token: Id,
         /// Previous operator
         from: AccountId,
         /// New operator
         to: AccountId,
+        /// The current status of the request
+        status: RequestStatus,
     }
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
     /// to add new static storage fields to your contract.
     #[ink(storage)]
-    #[derive(Default)]
     pub struct TransferEscrow {
-        phone_numbers_psp34: AccountId,
         transfer_requests: Mapping<u64, Request>,
+        phone_numbers_psp34: PhoneNumbersRef,
         next_id: u64,
     }
 
@@ -50,13 +72,32 @@ mod transfer_escrow {
         request_id: u64,
     }
 
+    // impl PSP34Receiver for TransferEscrow {
+    //     #[ink(message)]
+    //     fn before_received(
+    //         &mut self,
+    //         operator: AccountId,
+    //         from: AccountId,
+    //         id: openbrush::contracts::psp34::Id,
+    //         data: Vec<u8>,
+    //     ) -> Result<(), openbrush::contracts::psp34::PSP34ReceiverError> {
+    //     }
+    // }
+
     impl TransferEscrow {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(phone_numbers_psp34: AccountId) -> Self {
+        pub fn new(phone_numbers_psp34: Hash) -> Self {
+            let contract = PhoneNumbersRef::new()
+                .code_hash(phone_numbers_psp34)
+                .endowment(0)
+                .salt_bytes([0xDE, 0xAD, 0xBE, 0xEF])
+                .instantiate();
+
             Self {
-                phone_numbers_psp34,
-                ..Default::default()
+                phone_numbers_psp34: contract,
+                next_id: 0,
+                transfer_requests: Default::default(),
             }
         }
 
@@ -64,6 +105,35 @@ mod transfer_escrow {
         #[ink(message)]
         pub fn get(&self) -> bool {
             true
+        }
+
+        /// Register a new transfer request
+        pub fn register_new_request(&mut self, token_id: [u8; 12]) -> u64 {
+            // 1. Get current owner of the phone number
+            let id = Id::Bytes(token_id.to_vec());
+            let owner = self.phone_numbers_psp34.owner_of(id.clone());
+            let addr: AccountId = owner.unwrap();
+
+            // 2. Register new transfer request
+            let request = Request {
+                token: id,
+                from: addr,
+                to: self.env().caller(),
+                status: RequestStatus::Pending,
+            };
+            self.transfer_requests
+                .insert(self.next_id, &request)
+                .unwrap();
+
+            // 3. Emit transfer registration event
+            self.env().emit_event(TransferRequested {
+                from: addr,
+                to: self.env().caller(),
+                request_id: self.next_id,
+            });
+            let current_id = self.next_id.clone();
+            self.next_id += 1;
+            current_id
         }
     }
 
@@ -78,14 +148,14 @@ mod transfer_escrow {
         /// We test if the default constructor does its job.
         #[ink::test]
         fn default_works() {
-            let transfer_escrow = TransferEscrow::default();
+            let transfer_escrow = TransferEscrow::new([0u8; 32].into());
             assert_eq!(transfer_escrow.get(), true);
         }
 
         /// We test a simple use case of our contract.
         #[ink::test]
         fn it_works() {
-            let mut transfer_escrow = TransferEscrow::default();
+            let transfer_escrow = TransferEscrow::new([0u8; 32].into());
             assert_eq!(transfer_escrow.get(), true);
         }
     }
