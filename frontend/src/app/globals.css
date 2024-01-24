@@ -36,7 +36,7 @@
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
+    --background: #14202a;
 
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
@@ -77,4 +77,16 @@
     @apply bg-background font-sans text-foreground;
     @apply flex h-screen min-h-screen flex-col;
   }
+}
+
+.box-shadow {
+  box-shadow: 0 6px 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+.bg-button {
+  background-color: #00eac7;
+}
+
+.bg-button:hover {
+  background-color: #00eac7;
 }

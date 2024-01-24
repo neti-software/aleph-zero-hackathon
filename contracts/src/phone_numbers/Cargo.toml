@@ -1,21 +1,26 @@
 [package]
-name = "phone-numbers"
+name = "phone_numbers"
 version = "0.0.1"
 authors = ["Scio Labs <hello@scio.xyz>"]
 edition = "2021"
 
 [dependencies]
 ink = { version = "4.2.1", default-features = false }
-openbrush = { version = "4.0.0-beta", default-features = false, features = ["psp34"] }
-
+openbrush = { version = "4.0.0-beta", default-features = false, features = [
+    "psp34",
+    "access_control",
+] }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2", default-features = false, features = ["derive"], optional = true }
+ink_primitives = { version = "~3.4.0", default-features = false }
+
 
 [dev-dependencies]
 ink_e2e = "4.2.1"
 test_helpers = { path = "../test_helpers", default-features = false }
 
 [lib]
+name = "phone_numbers"
 path = "lib.rs"
 
 [features]
