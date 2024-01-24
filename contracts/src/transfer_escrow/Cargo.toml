@@ -24,6 +24,7 @@ std = [
     "scale/std",
     "scale-info/std",
     "openbrush/std",
+    "phone-numbers/std"
 ]
 ink-as-dependency = []
 e2e-tests = []
