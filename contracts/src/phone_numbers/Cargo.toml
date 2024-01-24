@@ -9,7 +9,6 @@ ink = { version = "4.2.1", default-features = false }
 openbrush = { git = "https://github.com/Brushfam/openbrush-contracts", default-features = false, features = [
     "psp34",
     "access_control",
-    "ownable",
 ] }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2", default-features = false, features = ["derive"], optional = true }
