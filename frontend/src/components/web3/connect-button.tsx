@@ -17,7 +17,6 @@ import {
   useBalance,
   useInkathon,
 } from '@scio-labs/use-inkathon'
-import { AlertOctagon } from 'lucide-react'
 import aznsIconSvg from 'public/icons/azns-icon.svg'
 import toast from 'react-hot-toast'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
@@ -34,8 +33,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { env } from '@/config/environment'
 import { truncateHash } from '@/utils/truncate-hash'
-
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -74,7 +71,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="h-12 min-w-[14rem] gap-2 rounded-2xl border border-white/10 bg-primary px-4 py-3 font-bold text-foreground"
+            className="bg-button h-12 min-w-[14rem] gap-2 rounded-3xl px-4 py-3 font-bold text-black"
             isLoading={isConnecting}
             disabled={isConnecting}
             translate="no"
@@ -117,11 +114,8 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
     <div className="flex select-none flex-wrap items-stretch justify-center gap-4">
       {/* Account Name, Address, and AZERO.ID-Domain (if assigned) */}
       <DropdownMenu>
-        <DropdownMenuTrigger
-          asChild
-          className="rounded-2xl bg-gray-900 px-4 py-6 font-bold text-foreground"
-        >
-          <Button className="min-w-[14rem] border" translate="no">
+        <DropdownMenuTrigger asChild className="rounded-3xl px-4 py-6 font-bold text-black">
+          <Button className="bg-button min-w-[14rem]" translate="no">
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-col items-center justify-center">
                 <AccountName account={activeAccount} />
@@ -200,7 +194,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
       </DropdownMenu>
 
       {/* Account Balance */}
-      {reducibleBalanceFormatted !== undefined && (
+      {/* {reducibleBalanceFormatted !== undefined && (
         <div className="flex min-w-[10rem] items-center justify-center gap-2 rounded-2xl border bg-gray-900 px-4 py-3 font-mono text-sm font-bold text-foreground">
           {reducibleBalanceFormatted}
           {(!reducibleBalance || reducibleBalance?.isZero()) && (
@@ -212,7 +206,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
             </Tooltip>
           )}
         </div>
-      )}
+      // )} */}
     </div>
   )
 }

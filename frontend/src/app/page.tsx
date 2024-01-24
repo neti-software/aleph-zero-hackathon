@@ -1,22 +1,25 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { useInkathon } from '@scio-labs/use-inkathon'
-import { toast } from 'react-hot-toast'
 
-import { ChainInfo } from '@/components/web3/chain-info'
-import { ConnectButton } from '@/components/web3/connect-button'
-import { GreeterContractInteractions } from '@/components/web3/greeter-contract-interactions'
 import AppBar from '@/components/ui/app-bar'
+import { ChainInfo } from '@/components/web3/chain-info'
+import { GreeterContractInteractions } from '@/components/web3/greeter-contract-interactions'
 
 export default function HomePage() {
+  const router = useRouter()
+
   // Display `useInkathon` error messages (optional)
   const { error } = useInkathon()
-  useEffect(() => {
-    if (!error) return
-    toast.error(error.message)
-  }, [error])
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.replace('/admin/associations')
+  //   } else {
+  //     router.replace('/auth/login')
+  //   }
+  // }, [isLoggedIn])
 
   return (
     <>
