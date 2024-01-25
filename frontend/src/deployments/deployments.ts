@@ -8,6 +8,7 @@ import { env } from '@/config/environment'
  */
 export enum ContractIds {
   PhoneNumbers = 'phone_numbers',
+  TransferEscrow = 'transfer_escrow',
 }
 
 export const getDeployments = async (): Promise<SubstrateDeployment[]> => {

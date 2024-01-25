@@ -132,4 +132,3 @@ deployments/**/development.ts
 # Environment files
 *.env*
 !.env*.example
-deployments/

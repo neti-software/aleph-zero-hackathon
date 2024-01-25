@@ -29,6 +29,9 @@ const main = async () => {
 
   // Write contract addresses to `{contract}/{network}.ts` file(s)
   await writeContractAddresses(chain.network, {
+    phone_numbers,
+  })
+  await writeContractAddresses(chain.network, {
     transfer_escrow,
   })
 }
