@@ -1,5 +1,6 @@
 'use client'
 
+import BasicTable from '@/components/table/table'
 // import { useRouter } from 'next/navigation'
 // import { useEffect } from 'react'
 // import { useInkathon } from '@scio-labs/use-inkathon'
@@ -21,9 +22,7 @@ export default function Dashboard() {
   return (
     <>
       <AppBar></AppBar>
-      <div className="container relative flex grow flex-col items-center justify-center">
-        dziala
-      </div>
+      <BasicTable />
     </>
   )
 }
