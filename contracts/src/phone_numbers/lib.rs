@@ -40,7 +40,7 @@ pub mod phone_numbers {
         }
 
         #[ink(message)]
-        pub fn set_metadata(&mut self, owner_name: String, id: Id) -> Result<(), PSP34Error> {
+        pub fn set_metadata(&mut self, owner: AccountId, id: Id) -> Result<(), PSP34Error> {
             let caller = Self::env().caller();
             let owner_option = psp34::Internal::_owner_of(self, &id);
             if owner_option != Some(caller) {
@@ -49,8 +49,8 @@ pub mod phone_numbers {
                 )));
             }
 
-            let owner_name_key = String::from("owner_name");
-            metadata::Internal::_set_attribute(self, id, owner_name_key, owner_name);
+            let owner_key = String::from("owner");
+            metadata::Internal::_set_attribute(self, id, owner_key, hex::encode(owner));
             Ok(())
         }
     }
