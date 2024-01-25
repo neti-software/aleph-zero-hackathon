@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 ink = { version = "4.2.1", default-features = false }
-openbrush = { git = "https://github.com/Brushfam/openbrush-contracts", default-features = false, features = [
+openbrush = { version = "4.0.0-beta", default-features = false, features = [
     "psp34",
     "access_control",
 ] }
@@ -16,7 +16,7 @@ ink_primitives = { version = "~3.4.0", default-features = false }
 
 
 [dev-dependencies]
-ink_e2e = "4.3.0"
+ink_e2e = "4.2.1"
 test_helpers = { path = "../test_helpers", default-features = false }
 
 [lib]
@@ -24,7 +24,7 @@ name = "phone_numbers"
 path = "lib.rs"
 
 [features]
-default = ["std", "e2e-tests"]
+default = ["std"]
 std = ["ink/std", "scale/std", "scale-info/std", "openbrush/std"]
 ink-as-dependency = []
 e2e-tests = []

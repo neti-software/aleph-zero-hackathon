@@ -1,5 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
+pub use phone_numbers::PhoneNumbersRef;
+
 #[openbrush::implementation(PSP34, AccessControl, PSP34Metadata, PSP34Enumerable)]
 #[openbrush::contract]
 pub mod phone_numbers {
@@ -7,7 +9,7 @@ pub mod phone_numbers {
 
     #[ink(storage)]
     #[derive(Default, Storage)]
-    pub struct Contract {
+    pub struct PhoneNumbers {
         #[storage_field]
         psp34: psp34::Data,
         #[storage_field]
@@ -19,8 +21,7 @@ pub mod phone_numbers {
     }
 
     const CENTRAL_AUTHORITY: RoleType = ink::selector_id!("CENTRAL_AUTHORITY");
-
-    impl Contract {
+    impl PhoneNumbers {
         #[ink(constructor)]
         pub fn new() -> Self {
             let mut instance = Self::default();
