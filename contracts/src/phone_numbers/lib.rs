@@ -2,7 +2,7 @@
 
 pub use phone_numbers::PhoneNumbersRef;
 
-#[openbrush::implementation(PSP34, AccessControl, PSP34Metadata)]
+#[openbrush::implementation(PSP34, AccessControl, PSP34Metadata, PSP34Enumerable)]
 #[openbrush::contract]
 pub mod phone_numbers {
     use openbrush::{modifiers, traits::Storage};
@@ -16,6 +16,8 @@ pub mod phone_numbers {
         access: access_control::Data,
         #[storage_field]
         metadata: metadata::Data,
+        #[storage_field]
+        enumerable: enumerable::Data,
     }
 
     const CENTRAL_AUTHORITY: RoleType = ink::selector_id!("CENTRAL_AUTHORITY");
