@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
@@ -12,9 +14,9 @@ import logo from 'public/icons/logo.svg'
 import { ConnectButton } from '../web3/connect-button'
 
 function ResponsiveAppBar() {
-  const [value, setValue] = React.useState('one')
+  const [value, setValue] = React.useState(1)
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
 
@@ -41,9 +43,18 @@ function ResponsiveAppBar() {
                   }}
                   aria-label="secondary tabs"
                 >
-                  <Tab value="1" label="NUMBER INFO" />
-                  <Tab value="2" label="REGISTER PHONE" />
-                  <Tab value="" label="REGISTER PHONE" />
+                  <Link href="/dashboard" passHref>
+                    <Tab value={1} onClick={() => setValue(0)} label="NUMBER PHONE" />
+                  </Link>
+                  <Link href="/register-phone" passHref>
+                    <Tab value={2} onClick={() => setValue(1)} label="REGISTER PHONE" />
+                  </Link>
+                  <Link href="/transfer-request" passHref>
+                    <Tab value={3} onClick={() => setValue(2)} label="TRANSFER REQUEST" />
+                  </Link>
+                  <Link href="/assign-number" passHref>
+                    <Tab value={4} onClick={() => setValue(3)} label="ASSIGN PHONE NUMBER" />
+                  </Link>
                 </Tabs>
               </Box>
             </Grid>
