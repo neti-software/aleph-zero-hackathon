@@ -1,11 +1,21 @@
-import { Box, Button, Container, MenuItem, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from 'react'
+
+import {
+  Box,
+  Button,
+  Container,
+  MenuItem,
+  TextField,
+  ThemeProvider,
+  Typography,
+  createTheme,
+} from '@mui/material'
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#00eac7'},
+    primary: { main: '#00eac7' },
   },
-});
+})
 
 const mobileOperators = [
   {
@@ -24,15 +34,22 @@ const mobileOperators = [
     value: '0x4444444444444444444444444444444444444444',
     label: 'Plus',
   },
-];
+]
 
-function RequestForm() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [mobileOperator, setMobileOperator] = useState(mobileOperators[0].value);
+interface RequestFormProps {
+  onFormDataSubmit: (phoneNumber: string, mobileOperator?: string) => void // Mobile operator is now optional
+  updateIsLoading: boolean
+  operatorIncluded: boolean
+}
+
+function RequestForm({ onFormDataSubmit, updateIsLoading, operatorIncluded }: RequestFormProps) {
+  const [phoneNumber, setPhoneNumberState] = useState('')
+
+  const [mobileOperator, setMobileOperator] = useState<string | undefined>(undefined)
 
   const handleSubmit = (event: React.FormEvent) => {
-    alert(mobileOperator + ' ' + phoneNumber);
-    event.preventDefault();
+    event.preventDefault()
+    onFormDataSubmit(phoneNumber, mobileOperator)
   }
 
   return (
@@ -46,7 +63,7 @@ function RequestForm() {
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5" color='primary'>
+          <Typography component="h1" variant="h5" color="primary">
             Register number
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -60,73 +77,77 @@ function RequestForm() {
               name="phoneNumber"
               autoComplete="Phone number"
               autoFocus
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => setPhoneNumberState(e.target.value)}
               sx={{
-                backgroundColor: "white",
-                borderRadius: "10px",
+                backgroundColor: 'white',
+                borderRadius: '10px',
                 '& label.Mui-focused': {
                   color: '#00eac7',
-                  borderRadius: "10px",
+                  borderRadius: '10px',
                 },
                 '& .MuiInput-underline:after': {
                   borderBottomColor: '#00eac7',
-                  borderRadius: "10px",
+                  borderRadius: '10px',
                 },
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {
                     borderColor: '#00eac7',
-                    borderRadius: "10px",
+                    borderRadius: '10px',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: '#00eac7',
-                    borderRadius: "10px",
+                    borderRadius: '10px',
                   },
                 },
               }}
             />
-            <TextField
-              id="outlined-select-currency"
-              name="mobileOperator"
-              select
-              value={mobileOperator}
-              label="Select operator"
-              fullWidth
-              onChange={(e) => setMobileOperator(e.target.value)}
-              sx={{
-                backgroundColor: "white",
-                borderRadius: "10px",
-                '& label.Mui-focused': {
-                  color: '#00eac7',
-                  borderRadius: "10px",
-                },
-                '& .MuiInput-underline:after': {
-                  borderBottomColor: '#00eac7',
-                  borderRadius: "10px",
-                },
-                '& .MuiOutlinedInput-root': {
-                  '&:hover fieldset': {
-                    borderColor: '#00eac7',
-                    borderRadius: "10px",
+            {operatorIncluded && (
+              <TextField
+                id="outlined-select-currency"
+                name="mobileOperator"
+                select
+                value={mobileOperator || ''}
+                label="Select operator"
+                fullWidth
+                onChange={(e) => setMobileOperator(e.target.value)}
+                sx={{
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& label.Mui-focused': {
+                    color: '#00eac7',
+                    borderRadius: '10px',
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#00eac7',
-                    borderRadius: "10px",
+                  '& .MuiInput-underline:after': {
+                    borderBottomColor: '#00eac7',
+                    borderRadius: '10px',
                   },
-                },
-              }}
-            >
-              {mobileOperators.map((operator) => (
-                <MenuItem key={operator.value} value={operator.value}>
-                  {operator.label}
-                </MenuItem>
-              ))}
-            </TextField>
+                  '& .MuiOutlinedInput-root': {
+                    '&:hover fieldset': {
+                      borderColor: '#00eac7',
+                      borderRadius: '10px',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#00eac7',
+                      borderRadius: '10px',
+                    },
+                  },
+                }}
+              >
+                {mobileOperators.map((operator) => (
+                  <MenuItem key={operator.value} value={operator.value}>
+                    {operator.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={updateIsLoading}
               style={{
-                backgroundColor: '#00eac7'
+                backgroundColor: '#00eac7',
               }}
               sx={{
                 mt: 3,
@@ -139,7 +160,7 @@ function RequestForm() {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+  )
 }
 
-export default RequestForm;
+export default RequestForm

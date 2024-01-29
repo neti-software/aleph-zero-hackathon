@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 
-import { Button, TablePagination } from '@mui/material'
+import { TablePagination } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -67,12 +67,12 @@ export default function BasicTable() {
     setPage(0)
   }
 
-  const addRow = () => {
-    const newRow = createData(0, 0, 0, 0, 0)
-    rows.push(newRow)
-    // Make a copy of the rows array to trigger a re-render
-    setRows([...rows])
-  }
+  // const addRow = () => {
+  //   const newRow = createData(0, 0, 0, 0, 0)
+  //   rows.push(newRow)
+  //   // Make a copy of the rows array to trigger a re-render
+  //   setRows([...rows])
+  // }
 
   return (
     <div className="container relative flex grow flex-col items-center justify-center text-white">
@@ -113,14 +113,6 @@ export default function BasicTable() {
             padding: '10px',
           }}
         >
-          <Button
-            onClick={addRow}
-            variant="contained"
-            color="primary"
-            className="bg-[#00eac7] text-black"
-          >
-            Add Phone Number
-          </Button>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, 100]}
             component="div"
