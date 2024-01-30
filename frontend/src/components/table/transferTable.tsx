@@ -50,6 +50,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
   const [rows, setRows] = useState(data?.length || 0)
   const [showModal, setShowModal] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
+  const [index, setIndex] = useState(0)
   const [modalMode, setModalMode] = useState<'approveTransfer' | 'finishTransfer'>(
     'approveTransfer',
   )
@@ -62,7 +63,6 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
-
   return (
     <div className="container relative flex grow flex-col items-center justify-center text-white">
       <TableContainer component={Paper} elevation={10}>
@@ -99,6 +99,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
                       onClick={(e) => {
                         setModalMode('finishTransfer')
                         setPhoneNumber(row.token.Bytes)
+                        setIndex(index)
                         setShowModal(true)
                       }}
                     >
@@ -112,6 +113,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
                       onClick={(e) => {
                         setModalMode('approveTransfer')
                         setPhoneNumber(row.token.Bytes)
+                        setIndex(index)
                         setShowModal(true)
                       }}
                     >
@@ -162,6 +164,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
         open={showModal}
         mode={modalMode}
         phoneNumber={phoneNumber}
+        index={index}
         onClose={() => {
           setShowModal(false)
         }}

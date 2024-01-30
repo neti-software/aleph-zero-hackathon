@@ -61,7 +61,6 @@ export default function TransferRequest() {
         if (isError) throw new Error(decodedOutput)
 
         const result = output as TransfersTableType
-
         return result
       })
 

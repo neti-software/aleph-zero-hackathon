@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 
+import ApproveTransfer from '@/app/approve-transfer/page'
 import FinishTransfer from '@/app/finish-transfer/page'
 import RegisterRequest from '@/app/register-request/page'
 
@@ -23,8 +24,9 @@ interface Props {
   mode?: 'setMetadata' | 'registerNewRequest' | 'finishTransfer' | 'approveTransfer'
   open: boolean
   onClose: () => void
+  index: number
   phoneNumber?: string | null
-  currentOperator?: string | null
+  currentOperator?: { name: string; walletAddress: string } | null
 }
 
 export default function RequestModal({
@@ -32,6 +34,7 @@ export default function RequestModal({
   open,
   onClose,
   phoneNumber,
+  index,
   currentOperator,
 }: Props) {
   return (
@@ -52,11 +55,7 @@ export default function RequestModal({
           />
         )}
         {mode == 'approveTransfer' && (
-          <RegisterRequest
-            phoneNumber={phoneNumber}
-            currentOperator={currentOperator}
-            onClose={onClose}
-          />
+          <ApproveTransfer phoneNumber={phoneNumber} onClose={onClose} index={index} />
         )}
       </Box>
     </Modal>

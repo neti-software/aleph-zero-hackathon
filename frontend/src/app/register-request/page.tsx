@@ -15,7 +15,7 @@ export default function RegisterRequest({
   currentOperator,
   onClose,
 }: {
-  currentOperator?: string | null
+  currentOperator?: { name: string; walletAddress: string } | null
   phoneNumber?: string | null
   onClose: () => void
 }) {
@@ -42,7 +42,7 @@ export default function RegisterRequest({
     try {
       if (!phoneNumber || !targetOperator) return
 
-      await contractTxWithToast(
+      const res = await contractTxWithToast(
         api,
         activeAccount.address,
         transferEscrowContract,
@@ -50,11 +50,14 @@ export default function RegisterRequest({
         {},
         [{ Bytes: phoneNumber }, targetOperator],
       )
-      await contractTxWithToast(api, activeAccount.address, phoneNumberContract, 'approve', {}, [
-        currentOperator,
-        { Bytes: phoneNumber },
-        true,
-      ])
+      // await contractTxWithToast(
+      //   api,
+      //   activeAccount.address,
+      //   phoneNumberContract,
+      //   'PSP34::approve',
+      //   {},
+      //   [currentOperator?.walletAddress, { Bytes: phoneNumber }, true],
+      // )
 
       onClose()
     } catch (e) {
@@ -72,7 +75,7 @@ export default function RegisterRequest({
         <InputLabel sx={{ color: '#00eac7' }}>current operator</InputLabel>
         <TextField
           margin="normal"
-          value={currentOperator}
+          value={currentOperator?.name}
           disabled={true}
           required
           fullWidth

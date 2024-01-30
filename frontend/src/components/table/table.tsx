@@ -64,7 +64,10 @@ export default function BasicTable({
   const [showModal, setShowModal] = useState(false)
   const [modalMode, setModalMode] = useState<'setMetadata' | 'registerNewRequest'>('setMetadata')
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
-  const [currentOperator, setCurrentOperator] = useState<string | null | undefined>('')
+  const [currentOperator, setCurrentOperator] = useState<{
+    name: string
+    walletAddress: string
+  } | null>()
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -116,7 +119,7 @@ export default function BasicTable({
                       setModalMode('registerNewRequest')
                       setShowModal(true)
                       setPhoneNumber(row.phoneNumber)
-                      setCurrentOperator(row.operator?.walletAddress)
+                      setCurrentOperator(row.operator)
                     }}
                   >
                     <BellPlusIcon />

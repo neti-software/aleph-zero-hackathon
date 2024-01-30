@@ -12,9 +12,11 @@ import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 export default function ApproveTransfer({
   phoneNumber,
   onClose,
+  index,
 }: {
   phoneNumber?: string | null
   onClose: () => void
+  index: number
 }) {
   const { api, activeAccount, activeSigner } = useInkathon()
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.TransferEscrow)
@@ -29,9 +31,8 @@ export default function ApproveTransfer({
     setUpdateIsLoading(true)
     try {
       if (!phoneNumber) return
-
       await contractTxWithToast(api, activeAccount.address, contract, 'approve_transfer', {}, [
-        { Bytes: phoneNumber },
+        index,
       ])
 
       onClose()
