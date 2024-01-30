@@ -15,7 +15,7 @@ import logo from 'public/icons/logo.svg'
 import { ConnectButton } from '../web3/connect-button'
 
 function ResponsiveAppBar() {
-  const [value, setValue] = React.useState(1)
+  const [value, setValue] = React.useState(0)
   const path = usePathname()
   if (path === '/') return
 

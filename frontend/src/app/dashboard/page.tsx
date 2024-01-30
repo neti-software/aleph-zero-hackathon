@@ -70,7 +70,7 @@ export default function Dashboard() {
             decodedOutput: decodedOutput2,
           } = decodeOutput(metadata, contract, 'PSP34Metadata::get_attribute')
 
-          const output3 = keyring.encodeAddress(hexToU8a(output2), 42)
+          const output3 = output2 != null ? keyring.encodeAddress(hexToU8a(output2), 42) : output2
 
           setTableData((prevData) => [
             ...prevData,
