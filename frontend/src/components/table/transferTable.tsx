@@ -87,7 +87,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
               const from =
                 operatorData.find((operator) => operator.walletAddress === row.from)?.name || null
               const to =
-                operatorData.find((operator) => operator.walletAddress === row.from)?.name || null
+                operatorData.find((operator) => operator.walletAddress === row.to)?.name || null
               return (
                 <StyledTableRow key={row.token.Bytes}>
                   <TableCell component="th" scope="row">
