@@ -5,11 +5,13 @@ import {
   Button,
   Container,
   InputLabel,
+  MenuItem,
   TextField,
   ThemeProvider,
   Typography,
   createTheme,
 } from '@mui/material'
+import operatorData from 'public/operators.json'
 
 const theme = createTheme({
   palette: {
@@ -48,6 +50,7 @@ function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormPro
             <InputLabel htmlFor={name} sx={{ color: '#00eac7' }}>
               {name === 'number_owner' ? 'wallet address' : 'phone number'}
             </InputLabel>
+
             <TextField
               margin="normal"
               value={input}
@@ -91,6 +94,7 @@ function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormPro
                   margin="normal"
                   value={operator}
                   required
+                  select
                   fullWidth
                   id={name}
                   name={name}
@@ -120,7 +124,13 @@ function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormPro
                       },
                     },
                   }}
-                />
+                >
+                  {operatorData.map((operator) => (
+                    <MenuItem key={operator.walletAddress} value={operator.walletAddress}>
+                      {operator.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </>
             ) : null}
 

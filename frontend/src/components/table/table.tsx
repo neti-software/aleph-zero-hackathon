@@ -85,7 +85,7 @@ export default function BasicTable({
             <StyledTableHeaderRow>
               <TableCell>Id </TableCell>
               <TableCell>Phone Numbers </TableCell>
-              <TableCell>Wallet Address </TableCell>
+              <TableCell>Current phone number holder</TableCell>
               <TableCell>Operator </TableCell>
               <TableCell width="120px">Actions</TableCell>
             </StyledTableHeaderRow>

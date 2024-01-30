@@ -69,7 +69,8 @@ export default function Dashboard() {
           ])
           const { output: operator } = decodeOutput(ownerOfNumber, contract, 'PSP34::owner_of')
           if (operator != activeAccount.address && numberOperator) continue
-          const matchedOperator = operatorData.find((opr) => opr.walletAddress === operator) || null
+          const matchedOperator =
+            operatorData.find((opr) => opr.walletAddress === operator) || operator
           const metadata = await contractQuery(
             api,
             '',

@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { styled } from '@mui/material/styles'
 import { CheckSquareIcon, ReplaceIcon } from 'lucide-react'
+import operatorData from 'public/operators.json'
 
 import { TransfersTableType } from '@/app/transfer-request/page'
 
@@ -82,47 +83,53 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
             {(rowsPerPage > 0 && data.length
               ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : data
-            ).map((row, index) => (
-              <StyledTableRow key={row.token.Bytes}>
-                <TableCell component="th" scope="row">
-                  {index + 1}
-                </TableCell>
-                <TableCell>{row.token.Bytes}</TableCell>
-                <TableCell>{row.from}</TableCell>
-                <TableCell>{row.to}</TableCell>
-                <TableCell>{row.approvals.filter((x) => !!x).length}/2</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell width="120px">
-                  {row.status.toLowerCase() === 'ready' ? (
-                    <IconButton
-                      sx={{ color: '#00eac7', pl: 0 }}
-                      onClick={(e) => {
-                        setModalMode('finishTransfer')
-                        setPhoneNumber(row.token.Bytes)
-                        setIndex(index)
-                        setShowModal(true)
-                      }}
-                    >
-                      <ReplaceIcon />
-                    </IconButton>
-                  ) : null}
+            ).map((row, index) => {
+              const from =
+                operatorData.find((operator) => operator.walletAddress === row.from)?.name || null
+              const to =
+                operatorData.find((operator) => operator.walletAddress === row.from)?.name || null
+              return (
+                <StyledTableRow key={row.token.Bytes}>
+                  <TableCell component="th" scope="row">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>{row.token.Bytes}</TableCell>
+                  <TableCell>{from}</TableCell>
+                  <TableCell>{to}</TableCell>
+                  <TableCell>{row.approvals.filter((x) => !!x).length}/2</TableCell>
+                  <TableCell>{row.status}</TableCell>
+                  <TableCell width="120px">
+                    {row.status.toLowerCase() === 'ready' ? (
+                      <IconButton
+                        sx={{ color: '#00eac7', pl: 0 }}
+                        onClick={(e) => {
+                          setModalMode('finishTransfer')
+                          setPhoneNumber(row.token.Bytes)
+                          setIndex(index)
+                          setShowModal(true)
+                        }}
+                      >
+                        <ReplaceIcon />
+                      </IconButton>
+                    ) : null}
 
-                  {row.status.toLowerCase() === 'pendingapprovals' ? (
-                    <IconButton
-                      sx={{ color: '#00eac7', pl: 0 }}
-                      onClick={(e) => {
-                        setModalMode('approveTransfer')
-                        setPhoneNumber(row.token.Bytes)
-                        setIndex(index)
-                        setShowModal(true)
-                      }}
-                    >
-                      <CheckSquareIcon />
-                    </IconButton>
-                  ) : null}
-                </TableCell>
-              </StyledTableRow>
-            ))}
+                    {row.status.toLowerCase() === 'pendingapprovals' ? (
+                      <IconButton
+                        sx={{ color: '#00eac7', pl: 0 }}
+                        onClick={(e) => {
+                          setModalMode('approveTransfer')
+                          setPhoneNumber(row.token.Bytes)
+                          setIndex(index)
+                          setShowModal(true)
+                        }}
+                      >
+                        <CheckSquareIcon />
+                      </IconButton>
+                    ) : null}
+                  </TableCell>
+                </StyledTableRow>
+              )
+            })}
           </TableBody>
         </Table>
         <div

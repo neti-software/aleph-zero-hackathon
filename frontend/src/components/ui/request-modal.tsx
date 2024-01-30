@@ -24,7 +24,7 @@ interface Props {
   mode?: 'setMetadata' | 'registerNewRequest' | 'finishTransfer' | 'approveTransfer'
   open: boolean
   onClose: () => void
-  index: number
+  index?: number
   phoneNumber?: string | null
   currentOperator?: { name: string; walletAddress: string } | null
 }
@@ -47,7 +47,7 @@ export default function RequestModal({
       <Box sx={style}>
         {mode == 'setMetadata' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
         {mode == 'finishTransfer' && (
-          <FinishTransfer phoneNumber={phoneNumber} onClose={onClose} index={index} />
+          <FinishTransfer phoneNumber={phoneNumber} onClose={onClose} index={index || 0} />
         )}
         {mode == 'registerNewRequest' && (
           <RegisterRequest
@@ -57,7 +57,7 @@ export default function RequestModal({
           />
         )}
         {mode == 'approveTransfer' && (
-          <ApproveTransfer phoneNumber={phoneNumber} onClose={onClose} index={index} />
+          <ApproveTransfer phoneNumber={phoneNumber} onClose={onClose} index={index || 0} />
         )}
       </Box>
     </Modal>
