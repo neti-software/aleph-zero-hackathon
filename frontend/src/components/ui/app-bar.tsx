@@ -4,13 +4,22 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 
+import { ContractIds } from '@/deployments/deployments'
 import { Grid, Tab, Tabs } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Toolbar from '@mui/material/Toolbar'
+import {
+  contractQuery,
+  decodeOutput,
+  useInkathon,
+  useRegisteredContract,
+} from '@scio-labs/use-inkathon'
 import logo from 'public/icons/logo.svg'
+import toast from 'react-hot-toast'
 
 import { ConnectButton } from '../web3/connect-button'
 
@@ -23,6 +32,59 @@ function ResponsiveAppBar() {
     setValue(newValue)
   }
 
+  const { api, activeAccount, activeSigner } = useInkathon()
+  const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
+  const [userType, setUserType] = useState<'owner' | 'operator' | 'user'>()
+
+  const fetchData = async () => {
+    if (!contract || !api) return
+
+    setUserType(undefined)
+    try {
+      if (!api || !contract || !activeAccount) return
+      const result = await contractQuery(api, '', contract, 'AccessControl::has_role', {}, [
+        0,
+        activeAccount.address,
+      ])
+      const { output, isError, decodedOutput } = decodeOutput(
+        result,
+        contract,
+        'AccessControl::has_role',
+      )
+      if (output) {
+        setUserType('owner')
+      } else {
+        const result = await contractQuery(api, '', contract, 'PSP34::balance_of', {}, [
+          activeAccount.address,
+        ])
+        const { output, isError, decodedOutput } = decodeOutput(
+          result,
+          contract,
+          'PSP34::balance_of',
+        )
+        if (Number(output) > 0) {
+          setUserType('operator')
+        } else {
+          setUserType('user')
+        }
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error('Error while fetching user type. Try again…')
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [activeAccount])
+
+  const items = React.useMemo(() => {
+    return [
+      { label: 'NUMBER PHONE', href: '/dashboard' },
+      userType === 'owner' && { label: 'REGISTER PHONE', href: '/register-phone' },
+      userType != 'owner' && { label: 'TRANSFER REQUEST', href: '/transfer-request' },
+    ].filter((v) => v)
+  }, [userType])
+  if (!api) return null
   return (
     <AppBar sx={{ bgcolor: '#090f13' }} position="static" className="box-shadow bg-[#090f13]">
       <Container maxWidth="xl">
@@ -46,38 +108,16 @@ function ResponsiveAppBar() {
                   }}
                   aria-label="secondary tabs"
                 >
-                  <Link href="/dashboard" passHref>
-                    <Tab
-                      value={1}
-                      className={value === 0 ? 'Mui-selected' : ''}
-                      onClick={() => setValue(0)}
-                      label="NUMBER PHONE"
-                    />
-                  </Link>
-                  <Link href="/register-phone" passHref>
-                    <Tab
-                      value={2}
-                      className={value === 1 ? 'Mui-selected' : ''}
-                      onClick={() => setValue(1)}
-                      label="REGISTER PHONE"
-                    />
-                  </Link>
-                  <Link href="/transfer-request" passHref>
-                    <Tab
-                      value={3}
-                      className={value === 2 ? 'Mui-selected' : ''}
-                      onClick={() => setValue(2)}
-                      label="TRANSFER REQUEST"
-                    />
-                  </Link>
-                  <Link href="/assign-number" passHref>
-                    <Tab
-                      value={4}
-                      className={value === 3 ? 'Mui-selected' : ''}
-                      onClick={() => setValue(3)}
-                      label="ASSIGN PHONE NUMBER"
-                    />
-                  </Link>
+                  {items.map((item: any, index) => (
+                    <Link key={item.href} href={item.href} passHref>
+                      <Tab
+                        value={index + 1}
+                        className={value === index ? 'Mui-selected' : ''}
+                        onClick={() => setValue(index)}
+                        label={item.label}
+                      />
+                    </Link>
+                  ))}
                 </Tabs>
               </Box>
             </Grid>
