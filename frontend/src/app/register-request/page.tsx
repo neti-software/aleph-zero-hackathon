@@ -41,9 +41,9 @@ export default function RegisterRequest({
 
     setUpdateIsLoading(true)
     try {
-      if (!phoneNumber || !targetOperator) return
+      if (!phoneNumber || !targetOperator || !currentOperator?.walletAddress) return
 
-      const res = await contractTxWithToast(
+      await contractTxWithToast(
         api,
         activeAccount.address,
         transferEscrowContract,
@@ -54,7 +54,7 @@ export default function RegisterRequest({
 
       await contractTxWithToast(
         api,
-        activeAccount.address,
+        currentOperator?.walletAddress,
         phoneNumberContract,
         'PSP34::approve',
         {},
