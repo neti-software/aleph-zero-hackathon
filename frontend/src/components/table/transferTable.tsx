@@ -11,6 +11,8 @@ import TableRow from '@mui/material/TableRow'
 import { createTheme, styled } from '@mui/material/styles'
 import { PlusCircleIcon, ReplaceIcon } from 'lucide-react'
 
+import { TransfersTableType } from '@/app/transfer-request/page'
+
 import RequestModal from '../ui/request-modal'
 
 function createData(id: number, phoneNumber: string) {
@@ -49,11 +51,7 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-export default function TransferTable({
-  data,
-}: {
-  data: { phoneNumber: string | null; accountId: string | null }[]
-}) {
+export default function TransferTable({ data }: { data: TransfersTableType[] }) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState(data?.length || 0)
@@ -79,6 +77,7 @@ export default function TransferTable({
               <TableCell>Phone Numbers</TableCell>
               <TableCell>Current Operator</TableCell>
               <TableCell>Target Operator</TableCell>
+              <TableCell>Approvals</TableCell>
               <TableCell>Status</TableCell>
               <TableCell width="120px">Actions</TableCell>
             </StyledTableHeaderRow>
@@ -93,7 +92,11 @@ export default function TransferTable({
                   {index + 1}
                 </TableCell>
                 <TableCell>{row.phoneNumber}</TableCell>
-                <TableCell>{row.accountId}</TableCell>
+                <TableCell>{row.from}</TableCell>
+                <TableCell>{row.to}</TableCell>
+                <TableCell>{row.approvals.length}/2</TableCell>
+                <TableCell>{row.status}</TableCell>
+
                 <TableCell width="120px">
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}

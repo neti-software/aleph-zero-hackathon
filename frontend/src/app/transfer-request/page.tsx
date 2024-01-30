@@ -16,15 +16,21 @@ import TransferTable from '@/components/table/transferTable'
 
 const keyring = new Keyring()
 
+export type TransfersTableType = {
+  from: string
+  to: string
+  status: string
+  phoneNumber: string
+  approvals: boolean[]
+}
+
 export default function TransferRequest() {
   const { api, activeAccount, activeSigner } = useInkathon()
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.TransferEscrow)
 
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
 
-  const [tableData, setTableData] = useState<
-    { phoneNumber: string | null; accountId: string | null }[]
-  >([])
+  const [tableData, setTableData] = useState<TransfersTableType[]>([])
 
   const fetchData = async () => {
     if (!contract || !api) return
@@ -54,9 +60,9 @@ export default function TransferRequest() {
 
         if (isError) throw new Error(decodedOutput)
 
-        console.log(output)
+        const result = output as TransfersTableType
 
-        return { phoneNumber: output.Ok.Bytes, accountId: output }
+        return result
       })
 
       setTableData(outputData)
