@@ -90,3 +90,10 @@
 .bg-button:hover {
   background-color: #00eac7;
 }
+
+.bg-button:focus-visible {
+  outline: 0px;
+}
+header {
+  background-color: #090f13;
+}

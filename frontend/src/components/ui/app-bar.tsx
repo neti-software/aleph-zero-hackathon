@@ -21,7 +21,7 @@ function ResponsiveAppBar() {
   }
 
   return (
-    <AppBar position="static" className="box-shadow bg-[#090f13]">
+    <AppBar sx={{ bgcolor: '#090f13' }} position="static" className="box-shadow bg-[#090f13]">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -44,16 +44,36 @@ function ResponsiveAppBar() {
                   aria-label="secondary tabs"
                 >
                   <Link href="/dashboard" passHref>
-                    <Tab value={1} onClick={() => setValue(0)} label="NUMBER PHONE" />
+                    <Tab
+                      value={1}
+                      className={value === 0 ? 'Mui-selected' : ''}
+                      onClick={() => setValue(0)}
+                      label="NUMBER PHONE"
+                    />
                   </Link>
                   <Link href="/register-phone" passHref>
-                    <Tab value={2} onClick={() => setValue(1)} label="REGISTER PHONE" />
+                    <Tab
+                      value={2}
+                      className={value === 1 ? 'Mui-selected' : ''}
+                      onClick={() => setValue(1)}
+                      label="REGISTER PHONE"
+                    />
                   </Link>
                   <Link href="/transfer-request" passHref>
-                    <Tab value={3} onClick={() => setValue(2)} label="TRANSFER REQUEST" />
+                    <Tab
+                      value={3}
+                      className={value === 2 ? 'Mui-selected' : ''}
+                      onClick={() => setValue(2)}
+                      label="TRANSFER REQUEST"
+                    />
                   </Link>
                   <Link href="/assign-number" passHref>
-                    <Tab value={4} onClick={() => setValue(3)} label="ASSIGN PHONE NUMBER" />
+                    <Tab
+                      value={4}
+                      className={value === 3 ? 'Mui-selected' : ''}
+                      onClick={() => setValue(3)}
+                      label="ASSIGN PHONE NUMBER"
+                    />
                   </Link>
                 </Tabs>
               </Box>
@@ -70,4 +90,5 @@ function ResponsiveAppBar() {
     </AppBar>
   )
 }
+
 export default ResponsiveAppBar
