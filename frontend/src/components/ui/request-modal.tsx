@@ -26,10 +26,6 @@ interface Props {
 }
 
 export default function RequestModal({ mode = 'minting', open, onClose, phoneNumber }: Props) {
-  const handleClose = () => {
-    onClose()
-  }
-
   return (
     <Modal
       open={open}
@@ -39,7 +35,7 @@ export default function RequestModal({ mode = 'minting', open, onClose, phoneNum
     >
       <Box sx={style}>
         {mode == 'minting' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
-        {mode == 'setting' && <SetMetadata />}
+        {mode == 'setting' && <SetMetadata phoneNumber={phoneNumber} onClose={onClose} />}
       </Box>
     </Modal>
   )
