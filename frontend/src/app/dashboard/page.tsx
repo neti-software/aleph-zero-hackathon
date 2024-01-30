@@ -16,34 +16,43 @@ import BasicTable from '@/components/table/table'
 export default function Dashboard() {
   const { api, activeAccount, activeSigner } = useInkathon()
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
-  const [updateIsLoading, setUpdateIsLoading] = useState<boolean>(false)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(20)
+
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
-  const [tableData, setTableData] = useState<any>()
+  const [tableData, setTableData] = useState<string[]>([])
   const fetchData = async () => {
     if (!contract || !api) return
 
     setFetchIsLoading(true)
     try {
-      //todo iterate over owners(operators), pass data to the table
-      const result = await contractQuery(
-        api,
-        '',
-        contract,
-        'PSP34Enumerable::owners_token_by_index',
-        {},
-        [activeAccount?.address, 0],
-      )
+      if (!api || !contract) return
+      const result = await contractQuery(api, '', contract, 'PSP34::totalSupply')
       const { output, isError, decodedOutput } = decodeOutput(
         result,
         contract,
-        'PSP34Enumerable::owners_token_by_index',
+        'PSP34::totalSupply',
       )
-      if (isError) throw new Error(decodedOutput)
-      setTableData(output)
+      for (let index = 0; index < +output; index++) {
+        const result = await contractQuery(api, '', contract, 'PSP34Enumerable::tokenByIndex', {}, [
+          index,
+        ])
+        const { output, isError, decodedOutput } = decodeOutput(
+          result,
+          contract,
+          'PSP34Enumerable::tokenByIndex',
+        )
+        if (isError) throw new Error(decodedOutput)
+        if (output && output.Ok && output.Ok.Bytes) {
+          setTableData((prevData) => {
+            return [...prevData, output.Ok.Bytes]
+          })
+        }
+      }
     } catch (e) {
       console.error(e)
       toast.error('Error while fetching table data. Try again…')
-      setTableData(undefined)
+      setTableData([])
     } finally {
       setFetchIsLoading(false)
     }
@@ -54,9 +63,5 @@ export default function Dashboard() {
 
   if (!api) return null
 
-  return (
-    <>
-      <BasicTable />
-    </>
-  )
+  return <>{!!tableData.length && <BasicTable data={tableData} />}</>
 }
