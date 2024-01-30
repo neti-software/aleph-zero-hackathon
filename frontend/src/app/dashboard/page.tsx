@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 
 import { ContractIds } from '@/deployments/deployments'
+import Keyring from '@polkadot/keyring'
+import { hexToU8a } from '@polkadot/util'
 import {
   contractQuery,
   decodeOutput,
@@ -12,6 +14,8 @@ import {
 import toast from 'react-hot-toast'
 
 import BasicTable from '@/components/table/table'
+
+const keyring = new Keyring()
 
 export default function Dashboard() {
   const { api, activeAccount, activeSigner } = useInkathon()
@@ -65,9 +69,12 @@ export default function Dashboard() {
             isError: isError2,
             decodedOutput: decodedOutput2,
           } = decodeOutput(metadata, contract, 'PSP34Metadata::get_attribute')
+
+          const output3 = keyring.encodeAddress(hexToU8a(output2), 42)
+
           setTableData((prevData) => [
             ...prevData,
-            { phoneNumber: output.Ok.Bytes, accountId: output2 },
+            { phoneNumber: output.Ok.Bytes, accountId: output3 },
           ])
         }
       }
