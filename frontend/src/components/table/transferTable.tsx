@@ -8,8 +8,8 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { createTheme, styled } from '@mui/material/styles'
-import { ReplaceIcon } from 'lucide-react'
+import { styled } from '@mui/material/styles'
+import { CheckSquareIcon, ReplaceIcon } from 'lucide-react'
 
 import { TransfersTableType } from '@/app/transfer-request/page'
 
@@ -18,13 +18,6 @@ import RequestModal from '../ui/request-modal'
 function createData(id: number, phoneNumber: string) {
   return { id, phoneNumber }
 }
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#00eac7',
-    },
-  },
-})
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(even)': {
@@ -57,6 +50,9 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
   const [rows, setRows] = useState(data?.length || 0)
   const [showModal, setShowModal] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
+  const [modalMode, setModalMode] = useState<'approveTransfer' | 'finishTransfer'>(
+    'approveTransfer',
+  )
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -94,17 +90,34 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
                 <TableCell>{row.token.Bytes}</TableCell>
                 <TableCell>{row.from}</TableCell>
                 <TableCell>{row.to}</TableCell>
-                <TableCell>{row.approvals.length}/2</TableCell>
+                <TableCell>{row.approvals.filter((x) => !!x).length}/2</TableCell>
                 <TableCell>{row.status}</TableCell>
                 <TableCell width="120px">
-                  <IconButton
-                    sx={{ color: '#00eac7', pl: 0 }}
-                    onClick={(e) => {
-                      setShowModal(true)
-                    }}
-                  >
-                    <ReplaceIcon />
-                  </IconButton>
+                  {row.status.toLowerCase() === 'ready' ? (
+                    <IconButton
+                      sx={{ color: '#00eac7', pl: 0 }}
+                      onClick={(e) => {
+                        setModalMode('finishTransfer')
+                        setPhoneNumber(row.token.Bytes)
+                        setShowModal(true)
+                      }}
+                    >
+                      <ReplaceIcon />
+                    </IconButton>
+                  ) : null}
+
+                  {row.status.toLowerCase() === 'pendingapprovals' ? (
+                    <IconButton
+                      sx={{ color: '#00eac7', pl: 0 }}
+                      onClick={(e) => {
+                        setModalMode('approveTransfer')
+                        setPhoneNumber(row.token.Bytes)
+                        setShowModal(true)
+                      }}
+                    >
+                      <CheckSquareIcon />
+                    </IconButton>
+                  ) : null}
                 </TableCell>
               </StyledTableRow>
             ))}
@@ -147,7 +160,7 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
       </TableContainer>
       <RequestModal
         open={showModal}
-        mode={'setting'}
+        mode={modalMode}
         phoneNumber={phoneNumber}
         onClose={() => {
           setShowModal(false)

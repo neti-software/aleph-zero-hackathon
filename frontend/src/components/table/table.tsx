@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { createTheme, styled } from '@mui/material/styles'
-import { PlusCircleIcon, ReplaceIcon } from 'lucide-react'
+import { BellPlusIcon, PlusCircleIcon } from 'lucide-react'
 
 import RequestModal from '../ui/request-modal'
 
@@ -58,8 +58,9 @@ export default function BasicTable({
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState(data?.length || 0)
   const [showModal, setShowModal] = useState(false)
-  const [modalMode, setModalMode] = useState<'minting' | 'setting'>('minting')
+  const [modalMode, setModalMode] = useState<'setMetadata' | 'registerNewRequest'>('setMetadata')
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
+  const [currentOperator, setCurrentOperator] = useState<string>('')
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -98,7 +99,7 @@ export default function BasicTable({
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}
                     onClick={(e) => {
-                      setModalMode('minting')
+                      setModalMode('setMetadata')
                       setShowModal(true)
                       setPhoneNumber(row.phoneNumber)
                     }}
@@ -108,11 +109,13 @@ export default function BasicTable({
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}
                     onClick={(e) => {
-                      setModalMode('setting')
+                      setModalMode('registerNewRequest')
                       setShowModal(true)
+                      setPhoneNumber(row.phoneNumber)
+                      setCurrentOperator('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY') //TODO: set current operator dynamically
                     }}
                   >
-                    <ReplaceIcon />
+                    <BellPlusIcon />
                   </IconButton>
                 </TableCell>
               </StyledTableRow>
@@ -158,6 +161,7 @@ export default function BasicTable({
         open={showModal}
         mode={modalMode}
         phoneNumber={phoneNumber}
+        currentOperator={currentOperator}
         onClose={() => {
           setShowModal(false)
         }}
