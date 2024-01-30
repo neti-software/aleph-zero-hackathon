@@ -148,6 +148,7 @@ mod transfer_escrow {
             if req.approvals.iter().all(|x| x == &true) {
                 req.status = RequestStatus::Ready;
             }
+            self.transfer_requests.insert(request_id, &req);
             Ok(())
         }
 
@@ -165,10 +166,12 @@ mod transfer_escrow {
             }
 
             self.phone_numbers_psp34
-                .transfer(req.to, req.token, Vec::new())
+                .transfer(req.to, req.token.clone(), Vec::new())
                 .unwrap();
 
             req.status = RequestStatus::Finalized;
+
+            self.transfer_requests.insert(request_id, &req);
 
             return Ok(());
         }
