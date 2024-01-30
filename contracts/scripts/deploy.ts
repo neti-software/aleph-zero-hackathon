@@ -21,11 +21,12 @@ const main = async () => {
   // dummy deploy for the nft contract
   const { abi, wasm } = await getDeploymentData('phone_numbers')
   const phone_numbers = await deployContract(api, account, abi, wasm, 'new', [])
-  let nftHash = phone_numbers.hash
 
   // deploy the transfer escrow contract
   const te = await getDeploymentData('transfer_escrow')
-  const transfer_escrow = await deployContract(api, account, te.abi, te.wasm, 'new', [nftHash])
+  const transfer_escrow = await deployContract(api, account, te.abi, te.wasm, 'new', [
+    phone_numbers.address,
+  ])
 
   // Write contract addresses to `{contract}/{network}.ts` file(s)
   await writeContractAddresses(chain.network, {

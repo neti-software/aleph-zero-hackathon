@@ -9,7 +9,10 @@ ink = { version = "4.2.1", default-features = false }
 openbrush = { version = "4.0.0-beta", default-features = false, features = ["psp34"] }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
-phone-numbers = { package = "phone_numbers", path = "../phone_numbers", default-features = false, features = ["ink-as-dependency"] }
+phone-numbers = { package = "phone_numbers", path = "../phone_numbers", default-features = false, features = [
+    "ink-as-dependency",
+] }
+hex = { version = "0.4.3", default-features = false, features = ["alloc"] }
 
 [dev-dependencies]
 ink_e2e = "4.2.1"
@@ -19,12 +22,6 @@ path = "lib.rs"
 
 [features]
 default = ["std"]
-std = [
-    "ink/std",
-    "scale/std",
-    "scale-info/std",
-    "openbrush/std",
-    "phone-numbers/std"
-]
+std = ["ink/std", "scale/std", "scale-info/std", "openbrush/std", "phone-numbers/std"]
 ink-as-dependency = []
 e2e-tests = []

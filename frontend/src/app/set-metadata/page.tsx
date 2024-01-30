@@ -21,7 +21,9 @@ export default function SetMetadata() {
 
     setUpdateIsLoading(true)
     try {
-      await contractTxWithToast(api, activeAccount.address, contract, 'setMetadata', {}, [phoneNumber])
+      await contractTxWithToast(api, activeAccount.address, contract, 'setMetadata', {}, [
+        phoneNumber,
+      ])
     } catch (e) {
       console.error(e)
     } finally {
@@ -31,9 +33,5 @@ export default function SetMetadata() {
 
   if (!api) return null
 
-  return (
-    <>
-      {/*transfer data*/}
-    </>
-  )
+  return <>{/*transfer data*/}</>
 }
