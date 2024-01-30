@@ -23,7 +23,7 @@ export default function Dashboard() {
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(20)
-
+  const [isOperatorAccess, setIsOperatorAccess] = useState<boolean>(false)
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
 
   const [tableData, setTableData] = useState<
@@ -42,6 +42,7 @@ export default function Dashboard() {
       if (!api || !contract || !activeAccount) return
       const isCentralAuth = await isCentralAuthority()
       const numberOperator = await isOperator()
+
       const result = await contractQuery(api, '', contract, 'PSP34::totalSupply')
       const { output, isError, decodedOutput } = decodeOutput(
         result,
@@ -117,16 +118,23 @@ export default function Dashboard() {
     const { output } = decodeOutput(result, contract, 'AccessControl::has_role')
     return output
   }
+
   async function isOperator(): Promise<boolean> {
     if (!contract || !api || !activeAccount) return false
+
     const result = await contractQuery(api, '', contract, 'PSP34::balance_of', {}, [
       activeAccount.address,
     ])
+
     const { output } = decodeOutput(result, contract, 'PSP34::balance_of')
-    return Number(output) > 0
+
+    const isOperator = Number(output) > 0
+
+    setIsOperatorAccess(isOperator)
+    return isOperator
   }
 
   if (!api) return null
 
-  return <>{!!tableData.length && <BasicTable data={tableData} />}</>
+  return <>{!!tableData.length && <BasicTable data={tableData} isOperator={isOperatorAccess} />}</>
 }

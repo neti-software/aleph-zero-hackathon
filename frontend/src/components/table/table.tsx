@@ -13,9 +13,6 @@ import { BellPlusIcon, PlusCircleIcon } from 'lucide-react'
 
 import RequestModal from '../ui/request-modal'
 
-function createData(id: number, phoneNumber: string) {
-  return { id, phoneNumber }
-}
 const theme = createTheme({
   palette: {
     primary: {
@@ -51,7 +48,9 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
 
 export default function BasicTable({
   data,
+  isOperator,
 }: {
+  isOperator: boolean
   data: {
     phoneNumber: string | null
     accountId: string | null
@@ -103,16 +102,19 @@ export default function BasicTable({
                 <TableCell>{row.accountId}</TableCell>
                 <TableCell>{row.operator?.name}</TableCell>
                 <TableCell width="120px">
-                  <IconButton
-                    sx={{ color: '#00eac7', pl: 0 }}
-                    onClick={(e) => {
-                      setModalMode('setMetadata')
-                      setShowModal(true)
-                      setPhoneNumber(row.phoneNumber)
-                    }}
-                  >
-                    <PlusCircleIcon />
-                  </IconButton>
+                  {isOperator ? (
+                    <IconButton
+                      sx={{ color: '#00eac7', pl: 0 }}
+                      onClick={(e) => {
+                        setModalMode('setMetadata')
+                        setShowModal(true)
+                        setPhoneNumber(row.phoneNumber)
+                      }}
+                    >
+                      <PlusCircleIcon />
+                    </IconButton>
+                  ) : null}
+
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}
                     onClick={(e) => {
