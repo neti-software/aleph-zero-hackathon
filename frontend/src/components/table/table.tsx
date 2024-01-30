@@ -52,7 +52,7 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
 export default function BasicTable({
   data,
 }: {
-  data: { phoneNumber: string | null; accountId: string | null }[]
+  data: { phoneNumber: string | null; accountId: string | null; operator: string | null }[]
 }) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -64,7 +64,6 @@ export default function BasicTable({
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
-
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
@@ -79,6 +78,7 @@ export default function BasicTable({
               <TableCell>Id </TableCell>
               <TableCell>Phone Numbers </TableCell>
               <TableCell>Wallet Address </TableCell>
+              <TableCell>Operator </TableCell>
               <TableCell width="120px">Actions</TableCell>
             </StyledTableHeaderRow>
           </TableHead>
@@ -93,6 +93,7 @@ export default function BasicTable({
                 </TableCell>
                 <TableCell>{row.phoneNumber}</TableCell>
                 <TableCell>{row.accountId}</TableCell>
+                <TableCell>{row.operator}</TableCell>
                 <TableCell width="120px">
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}

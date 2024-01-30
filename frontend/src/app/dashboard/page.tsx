@@ -11,6 +11,7 @@ import {
   useInkathon,
   useRegisteredContract,
 } from '@scio-labs/use-inkathon'
+import operatorData from 'public/operators.json'
 import toast from 'react-hot-toast'
 
 import BasicTable from '@/components/table/table'
@@ -26,7 +27,7 @@ export default function Dashboard() {
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
 
   const [tableData, setTableData] = useState<
-    { phoneNumber: string | null; accountId: string | null }[]
+    { phoneNumber: string | null; accountId: string | null; operator: string | null }[]
   >([])
 
   const fetchData = async () => {
@@ -55,7 +56,6 @@ export default function Dashboard() {
           contract,
           'PSP34Enumerable::tokenByIndex',
         )
-
         if (isError) throw new Error(decodedOutput)
         if (output && output.Ok && output.Ok.Bytes) {
           const metadata = await contractQuery(
@@ -73,10 +73,18 @@ export default function Dashboard() {
           } = decodeOutput(metadata, contract, 'PSP34Metadata::get_attribute')
 
           const output3 = output2 != null ? keyring.encodeAddress(hexToU8a(output2), 42) : output2
+          const operator = await contractQuery(api, '', contract, 'PSP34::ownerOf', {}, [output.Ok])
+          const {
+            output: output4,
+            isError: isError4,
+            decodedOutput: decodedOutput4,
+          } = decodeOutput(operator, contract, 'PSP34::ownerOf')
+          const matchedOperator =
+            operatorData.find((operator) => operator.walletAddress === output4)?.name || null
 
           setTableData((prevData) => [
             ...prevData,
-            { phoneNumber: output.Ok.Bytes, accountId: output3 },
+            { phoneNumber: output.Ok.Bytes, accountId: output3, operator: matchedOperator },
           ])
         }
       }
