@@ -20,7 +20,8 @@ export default function RegisterRequest({
   onClose: () => void
 }) {
   const { api, activeAccount, activeSigner } = useInkathon()
-  const { contract: transferEscrowContract } = useRegisteredContract(ContractIds.TransferEscrow)
+  const { contract: transferEscrowContract, address: transferEscrowAddress } =
+    useRegisteredContract(ContractIds.TransferEscrow)
   const { contract: phoneNumberContract } = useRegisteredContract(ContractIds.PhoneNumbers)
 
   const [updateIsLoading, setUpdateIsLoading] = useState<boolean>(false)
@@ -50,14 +51,15 @@ export default function RegisterRequest({
         {},
         [{ Bytes: phoneNumber }, targetOperator],
       )
-      // await contractTxWithToast(
-      //   api,
-      //   activeAccount.address,
-      //   phoneNumberContract,
-      //   'PSP34::approve',
-      //   {},
-      //   [currentOperator?.walletAddress, { Bytes: phoneNumber }, true],
-      // )
+
+      await contractTxWithToast(
+        api,
+        activeAccount.address,
+        phoneNumberContract,
+        'PSP34::approve',
+        {},
+        [transferEscrowAddress, { Bytes: phoneNumber }, true],
+      )
 
       onClose()
     } catch (e) {

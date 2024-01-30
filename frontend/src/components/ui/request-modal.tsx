@@ -46,7 +46,9 @@ export default function RequestModal({
     >
       <Box sx={style}>
         {mode == 'setMetadata' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
-        {mode == 'finishTransfer' && <FinishTransfer phoneNumber={phoneNumber} onClose={onClose} />}
+        {mode == 'finishTransfer' && (
+          <FinishTransfer phoneNumber={phoneNumber} onClose={onClose} index={index} />
+        )}
         {mode == 'registerNewRequest' && (
           <RegisterRequest
             phoneNumber={phoneNumber}

@@ -12,12 +12,14 @@ import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 export default function FinishTransfer({
   phoneNumber,
   onClose,
+  index,
 }: {
   phoneNumber?: string | null
   onClose: () => void
+  index: number
 }) {
   const { api, activeAccount, activeSigner } = useInkathon()
-  const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
+  const { contract, address: contractAddress } = useRegisteredContract(ContractIds.TransferEscrow)
   const [updateIsLoading, setUpdateIsLoading] = useState<boolean>(false)
 
   const handleFormData = async () => {
@@ -28,10 +30,9 @@ export default function FinishTransfer({
 
     setUpdateIsLoading(true)
     try {
-      if (!phoneNumber) return
-
+      if (!index) return
       await contractTxWithToast(api, activeAccount.address, contract, 'finish_transfer', {}, [
-        phoneNumber,
+        index,
       ])
 
       onClose()
