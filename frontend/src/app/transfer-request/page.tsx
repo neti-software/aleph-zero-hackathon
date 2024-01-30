@@ -81,5 +81,5 @@ export default function TransferRequest() {
 
   if (!api) return null
 
-  return <>{!tableData.length && !fetchIsLoading && <TransferTable data={tableData} />}</>
+  return <>{tableData.length && !fetchIsLoading && <TransferTable data={tableData} />}</>
 }
