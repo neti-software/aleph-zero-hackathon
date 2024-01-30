@@ -49,8 +49,7 @@ pub mod phone_numbers {
                 )));
             }
 
-            let owner_key = String::from("owner");
-            metadata::Internal::_set_attribute(self, id, owner_key, hex::encode(owner));
+            metadata::Internal::_set_attribute(self, id, "owner".into(), hex::encode(owner));
             Ok(())
         }
     }
