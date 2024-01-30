@@ -29,6 +29,7 @@ export default function RequestModal({ mode = 'minting', open, onClose, phoneNum
   const handleClose = () => {
     onClose()
   }
+
   return (
     <Modal
       open={open}

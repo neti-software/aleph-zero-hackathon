@@ -24,9 +24,11 @@ export default function Dashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(20)
 
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
+
   const [tableData, setTableData] = useState<
     { phoneNumber: string | null; accountId: string | null }[]
   >([])
+
   const fetchData = async () => {
     if (!contract || !api) return
 
@@ -86,6 +88,7 @@ export default function Dashboard() {
       setFetchIsLoading(false)
     }
   }
+
   useEffect(() => {
     fetchData()
   }, [contract])
