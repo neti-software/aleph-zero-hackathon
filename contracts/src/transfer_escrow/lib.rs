@@ -76,6 +76,16 @@ mod transfer_escrow {
         }
 
         #[ink(message)]
+        pub fn get_request(&self, id: u64) -> Request {
+            self.transfer_requests.get(id).unwrap()
+        }
+
+        #[ink(message)]
+        pub fn get_request_count(&self) -> u64 {
+            self.next_id
+        }
+
+        #[ink(message)]
         pub fn register_new_request(&mut self, id: Id, target: AccountId) -> CallResult<()> {
             // 1. Get current owner of the phone number
             let owner = self.phone_numbers_psp34.owner_of(id.clone()).unwrap();
