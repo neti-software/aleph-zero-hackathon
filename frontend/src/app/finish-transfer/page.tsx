@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 
 import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 
-export default function ConfirmTransfer({
+export default function FinishTransfer({
   phoneNumber,
   onClose,
 }: {

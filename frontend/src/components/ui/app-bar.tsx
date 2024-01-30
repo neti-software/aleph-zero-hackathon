@@ -26,7 +26,6 @@ import { ConnectButton } from '../web3/connect-button'
 function ResponsiveAppBar() {
   const [value, setValue] = React.useState(0)
   const path = usePathname()
-  if (path === '/') return
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -73,6 +72,7 @@ function ResponsiveAppBar() {
       toast.error('Error while fetching user type. Try again…')
     }
   }
+
   useEffect(() => {
     fetchData()
   }, [activeAccount])
@@ -84,6 +84,9 @@ function ResponsiveAppBar() {
       userType != 'owner' && { label: 'TRANSFER REQUEST', href: '/transfer-request' },
     ].filter((v) => v)
   }, [userType])
+
+  if (path === '/') return
+
   if (!api) return null
   return (
     <AppBar sx={{ bgcolor: '#090f13' }} position="static" className="box-shadow bg-[#090f13]">

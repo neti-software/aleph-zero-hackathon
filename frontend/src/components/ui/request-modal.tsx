@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 
-import SetMetadata from '@/app/set-metadata/page'
+import FinishTransfer from '@/app/finish-transfer/page'
+import RegisterRequest from '@/app/register-request/page'
 
 import RequestMetadata from './request-metadata'
 
@@ -19,13 +20,20 @@ const style = {
 }
 
 interface Props {
-  mode?: 'minting' | 'setting'
+  mode?: 'setMetadata' | 'registerNewRequest' | 'finishTransfer' | 'approveTransfer'
   open: boolean
   onClose: () => void
   phoneNumber?: string | null
+  currentOperator?: string | null
 }
 
-export default function RequestModal({ mode = 'minting', open, onClose, phoneNumber }: Props) {
+export default function RequestModal({
+  mode = 'setMetadata',
+  open,
+  onClose,
+  phoneNumber,
+  currentOperator,
+}: Props) {
   return (
     <Modal
       open={open}
@@ -34,8 +42,22 @@ export default function RequestModal({ mode = 'minting', open, onClose, phoneNum
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        {mode == 'minting' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
-        {mode == 'setting' && <SetMetadata phoneNumber={phoneNumber} onClose={onClose} />}
+        {mode == 'setMetadata' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
+        {mode == 'finishTransfer' && <FinishTransfer phoneNumber={phoneNumber} onClose={onClose} />}
+        {mode == 'registerNewRequest' && (
+          <RegisterRequest
+            phoneNumber={phoneNumber}
+            currentOperator={currentOperator}
+            onClose={onClose}
+          />
+        )}
+        {mode == 'approveTransfer' && (
+          <RegisterRequest
+            phoneNumber={phoneNumber}
+            currentOperator={currentOperator}
+            onClose={onClose}
+          />
+        )}
       </Box>
     </Modal>
   )
