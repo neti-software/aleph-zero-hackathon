@@ -20,7 +20,7 @@ export type TransfersTableType = {
   from: string
   to: string
   status: string
-  phoneNumber: string
+  token: { Bytes: string }
   approvals: boolean[]
 }
 

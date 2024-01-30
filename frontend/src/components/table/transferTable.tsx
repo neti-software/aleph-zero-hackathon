@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { createTheme, styled } from '@mui/material/styles'
-import { PlusCircleIcon, ReplaceIcon } from 'lucide-react'
+import { ReplaceIcon } from 'lucide-react'
 
 import { TransfersTableType } from '@/app/transfer-request/page'
 
@@ -87,26 +87,16 @@ export default function TransferTable({ data }: { data: TransfersTableType[] }) 
               ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : data
             ).map((row, index) => (
-              <StyledTableRow key={row.phoneNumber}>
+              <StyledTableRow key={row.token.Bytes}>
                 <TableCell component="th" scope="row">
                   {index + 1}
                 </TableCell>
-                <TableCell>{row.phoneNumber}</TableCell>
+                <TableCell>{row.token.Bytes}</TableCell>
                 <TableCell>{row.from}</TableCell>
                 <TableCell>{row.to}</TableCell>
                 <TableCell>{row.approvals.length}/2</TableCell>
                 <TableCell>{row.status}</TableCell>
-
                 <TableCell width="120px">
-                  <IconButton
-                    sx={{ color: '#00eac7', pl: 0 }}
-                    onClick={(e) => {
-                      setShowModal(true)
-                      setPhoneNumber(row.phoneNumber)
-                    }}
-                  >
-                    <PlusCircleIcon />
-                  </IconButton>
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}
                     onClick={(e) => {
