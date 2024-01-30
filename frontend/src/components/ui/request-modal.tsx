@@ -1,11 +1,12 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Mint from '@/app/register-phone/page';
-import SetMetadata from '@/app/set-metadata/page';
+import Box from '@mui/material/Box'
+import Modal from '@mui/material/Modal'
+
+import SetMetadata from '@/app/set-metadata/page'
+
+import RequestMetadata from './request-metadata'
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -15,30 +16,30 @@ const style = {
   borderRadius: '10px',
   boxShadow: 24,
   p: 4,
-};
-
-interface Props {
-  mode?: 'minting' | 'setting';
-  open: boolean,
-  onClose: () => void;
 }
 
-export default function RequestModal({
-  mode = 'minting',
-  open,
-  onClose
-}: Props) {
+interface Props {
+  mode?: 'minting' | 'setting'
+  open: boolean
+  onClose: () => void
+  phoneNumber?: string | null
+}
+
+export default function RequestModal({ mode = 'minting', open, onClose, phoneNumber }: Props) {
+  const handleClose = () => {
+    onClose()
+  }
   return (
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {mode == 'minting' && (<Mint />)}
-          {mode == 'setting' && (<SetMetadata />)}
-        </Box>
-      </Modal>
-  );
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        {mode == 'minting' && <RequestMetadata phoneNumber={phoneNumber} onClose={onClose} />}
+        {mode == 'setting' && <SetMetadata />}
+      </Box>
+    </Modal>
+  )
 }

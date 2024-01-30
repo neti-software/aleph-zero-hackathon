@@ -20,7 +20,9 @@ export default function Dashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(20)
 
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
-  const [tableData, setTableData] = useState<string[]>([])
+  const [tableData, setTableData] = useState<
+    { phoneNumber: string | null; accountId: string | null }[]
+  >([])
   const fetchData = async () => {
     if (!contract || !api) return
 
@@ -34,19 +36,39 @@ export default function Dashboard() {
         'PSP34::totalSupply',
       )
       for (let index = 0; index < +output; index++) {
-        const result = await contractQuery(api, '', contract, 'PSP34Enumerable::tokenByIndex', {}, [
-          index,
-        ])
+        const phonesNumber = await contractQuery(
+          api,
+          '',
+          contract,
+          'PSP34Enumerable::tokenByIndex',
+          {},
+          [index],
+        )
         const { output, isError, decodedOutput } = decodeOutput(
-          result,
+          phonesNumber,
           contract,
           'PSP34Enumerable::tokenByIndex',
         )
+
         if (isError) throw new Error(decodedOutput)
         if (output && output.Ok && output.Ok.Bytes) {
-          setTableData((prevData) => {
-            return [...prevData, output.Ok.Bytes]
-          })
+          const metadata = await contractQuery(
+            api,
+            '',
+            contract,
+            'PSP34Metadata::get_attribute',
+            {},
+            [{ Bytes: output.Ok.Bytes }, 'owner'],
+          )
+          const {
+            output: output2,
+            isError: isError2,
+            decodedOutput: decodedOutput2,
+          } = decodeOutput(metadata, contract, 'PSP34Metadata::get_attribute')
+          setTableData((prevData) => [
+            ...prevData,
+            { phoneNumber: output.Ok.Bytes, accountId: output2 },
+          ])
         }
       }
     } catch (e) {

@@ -9,8 +9,9 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { createTheme, styled } from '@mui/material/styles'
-import RequestModal from '../ui/request-modal'
 import { PlusCircleIcon, ReplaceIcon } from 'lucide-react'
+
+import RequestModal from '../ui/request-modal'
 
 function createData(id: number, phoneNumber: string) {
   return { id, phoneNumber }
@@ -48,12 +49,17 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-export default function BasicTable({ data }: { data: string[] }) {
+export default function BasicTable({
+  data,
+}: {
+  data: { phoneNumber: string | null; accountId: string | null }[]
+}) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState(data?.length || 0)
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState<'minting' | 'setting'>('minting');
+  const [showModal, setShowModal] = useState(false)
+  const [modalMode, setModalMode] = useState<'minting' | 'setting'>('minting')
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -72,8 +78,8 @@ export default function BasicTable({ data }: { data: string[] }) {
             <StyledTableHeaderRow>
               <TableCell>Id </TableCell>
               <TableCell>Phone Numbers </TableCell>
-              <TableCell>Account Id </TableCell>
-              <TableCell width='120px'>Actions</TableCell>
+              <TableCell>Wallet Address </TableCell>
+              <TableCell width="120px">Actions</TableCell>
             </StyledTableHeaderRow>
           </TableHead>
           <TableBody>
@@ -81,17 +87,30 @@ export default function BasicTable({ data }: { data: string[] }) {
               ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : data
             ).map((row, index) => (
-              <StyledTableRow key={row}>
+              <StyledTableRow key={row.phoneNumber}>
                 <TableCell component="th" scope="row">
                   {index + 1}
                 </TableCell>
-                <TableCell>{row}</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell width='120px'>
-                  <IconButton sx={{color: '#00eac7', pl: 0}} onClick={(e) => {setModalMode('minting'); setShowModal(true);}}>
+                <TableCell>{row.phoneNumber}</TableCell>
+                <TableCell>{row.accountId}</TableCell>
+                <TableCell width="120px">
+                  <IconButton
+                    sx={{ color: '#00eac7', pl: 0 }}
+                    onClick={(e) => {
+                      setModalMode('minting')
+                      setShowModal(true)
+                      setPhoneNumber(row.phoneNumber)
+                    }}
+                  >
                     <PlusCircleIcon />
                   </IconButton>
-                  <IconButton sx={{color: '#00eac7', pl: 0}} onClick={(e) => {setModalMode('setting'); setShowModal(true);}}>
+                  <IconButton
+                    sx={{ color: '#00eac7', pl: 0 }}
+                    onClick={(e) => {
+                      setModalMode('setting')
+                      setShowModal(true)
+                    }}
+                  >
                     <ReplaceIcon />
                   </IconButton>
                 </TableCell>
@@ -134,7 +153,14 @@ export default function BasicTable({ data }: { data: string[] }) {
           />
         </div>
       </TableContainer>
-      <RequestModal open={showModal} mode={modalMode} onClose={() => {setShowModal(false)}}></RequestModal>
+      <RequestModal
+        open={showModal}
+        mode={modalMode}
+        phoneNumber={phoneNumber}
+        onClose={() => {
+          setShowModal(false)
+        }}
+      ></RequestModal>
     </div>
   )
 }

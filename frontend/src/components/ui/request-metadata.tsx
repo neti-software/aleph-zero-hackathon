@@ -9,25 +9,29 @@ import toast from 'react-hot-toast'
 import RequestForm from '@/components/ui/request-form'
 import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 
-type UpdateGreetingValues = { newMessage: string }
-
-export default function Mint() {
+export default function RequestMetadata({
+  phoneNumber,
+  onClose,
+}: {
+  phoneNumber?: string | null
+  onClose: () => void
+}) {
   const { api, activeAccount, activeSigner } = useInkathon()
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
   const [updateIsLoading, setUpdateIsLoading] = useState<boolean>(false)
 
-  const handleFormData = async (phoneNumber: string) => {
+  const handleFormData = async (newOwner: string) => {
     if (!activeAccount || !contract || !activeSigner || !api) {
       toast.error('Wallet not connected. Try again…')
       return
     }
-
     setUpdateIsLoading(true)
     try {
       await contractTxWithToast(api, activeAccount.address, contract, 'setMetadata', {}, [
-        activeAccount.address,
-        { Bytes: '123123123' },
+        newOwner,
+        { Bytes: phoneNumber },
       ])
+      onClose()
     } catch (e) {
       console.error(e)
     } finally {
@@ -39,7 +43,11 @@ export default function Mint() {
 
   return (
     <>
-      <RequestForm onFormDataSubmit={handleFormData} updateIsLoading={updateIsLoading} />
+      <RequestForm
+        onFormDataSubmit={handleFormData}
+        name="number_owner"
+        updateIsLoading={updateIsLoading}
+      />
     </>
   )
 }

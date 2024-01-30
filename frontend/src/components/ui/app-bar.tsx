@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import * as React from 'react'
 
 import { Grid, Tab, Tabs } from '@mui/material'
@@ -15,6 +16,8 @@ import { ConnectButton } from '../web3/connect-button'
 
 function ResponsiveAppBar() {
   const [value, setValue] = React.useState(1)
+  const path = usePathname()
+  if (path === '/') return
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
