@@ -36,10 +36,12 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     if (!contract || !api) return
-
+    setTableData([])
     setFetchIsLoading(true)
     try {
-      if (!api || !contract) return
+      if (!api || !contract || !activeAccount) return
+      const isCentralAuth = await isCentralAuthority()
+      const numberOperator = await isOperator()
       const result = await contractQuery(api, '', contract, 'PSP34::totalSupply')
       const { output, isError, decodedOutput } = decodeOutput(
         result,
@@ -62,6 +64,12 @@ export default function Dashboard() {
         )
         if (isError) throw new Error(decodedOutput)
         if (output && output.Ok && output.Ok.Bytes) {
+          const ownerOfNumber = await contractQuery(api, '', contract, 'PSP34::owner_of', {}, [
+            output.Ok,
+          ])
+          const { output: operator } = decodeOutput(ownerOfNumber, contract, 'PSP34::owner_of')
+          if (operator != activeAccount.address && numberOperator) continue
+          const matchedOperator = operatorData.find((opr) => opr.walletAddress === operator) || null
           const metadata = await contractQuery(
             api,
             '',
@@ -71,20 +79,14 @@ export default function Dashboard() {
             [{ Bytes: output.Ok.Bytes }, 'owner'],
           )
           const {
-            output: output2,
+            output: userNumber,
             isError: isError2,
             decodedOutput: decodedOutput2,
           } = decodeOutput(metadata, contract, 'PSP34Metadata::get_attribute')
+          const output3 =
+            userNumber != null ? keyring.encodeAddress(hexToU8a(userNumber), 42) : userNumber
+          if (!isCentralAuth && !numberOperator && output3 !== activeAccount.address) continue
 
-          const output3 = output2 != null ? keyring.encodeAddress(hexToU8a(output2), 42) : output2
-          const operator = await contractQuery(api, '', contract, 'PSP34::ownerOf', {}, [output.Ok])
-          const {
-            output: output4,
-            isError: isError4,
-            decodedOutput: decodedOutput4,
-          } = decodeOutput(operator, contract, 'PSP34::ownerOf')
-          const matchedOperator =
-            operatorData.find((operator) => operator.walletAddress === output4) || null
           setTableData((prevData) => [
             ...prevData,
             { phoneNumber: output.Ok.Bytes, accountId: output3, operator: matchedOperator },
@@ -102,7 +104,26 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData()
-  }, [contract])
+  }, [activeAccount])
+
+  async function isCentralAuthority(): Promise<boolean> {
+    if (!contract || !api || !activeAccount) return false
+
+    const result = await contractQuery(api, '', contract, 'AccessControl::has_role', {}, [
+      0,
+      activeAccount.address,
+    ])
+    const { output } = decodeOutput(result, contract, 'AccessControl::has_role')
+    return output
+  }
+  async function isOperator(): Promise<boolean> {
+    if (!contract || !api || !activeAccount) return false
+    const result = await contractQuery(api, '', contract, 'PSP34::balance_of', {}, [
+      activeAccount.address,
+    ])
+    const { output } = decodeOutput(result, contract, 'PSP34::balance_of')
+    return Number(output) > 0
+  }
 
   if (!api) return null
 
