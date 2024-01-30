@@ -52,7 +52,11 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
 export default function BasicTable({
   data,
 }: {
-  data: { phoneNumber: string | null; accountId: string | null; operator: string | null }[]
+  data: {
+    phoneNumber: string | null
+    accountId: string | null
+    operator: { name: string; walletAddress: string } | null
+  }[]
 }) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -60,7 +64,7 @@ export default function BasicTable({
   const [showModal, setShowModal] = useState(false)
   const [modalMode, setModalMode] = useState<'setMetadata' | 'registerNewRequest'>('setMetadata')
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
-  const [currentOperator, setCurrentOperator] = useState<string>('')
+  const [currentOperator, setCurrentOperator] = useState<string | null | undefined>('')
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -69,7 +73,7 @@ export default function BasicTable({
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
-
+  console.log(data)
   return (
     <div className="container relative flex grow flex-col items-center justify-center text-white">
       <TableContainer component={Paper} elevation={10}>
@@ -94,7 +98,7 @@ export default function BasicTable({
                 </TableCell>
                 <TableCell>{row.phoneNumber}</TableCell>
                 <TableCell>{row.accountId}</TableCell>
-                <TableCell>{row.operator}</TableCell>
+                <TableCell>{row.operator?.name}</TableCell>
                 <TableCell width="120px">
                   <IconButton
                     sx={{ color: '#00eac7', pl: 0 }}
@@ -112,7 +116,7 @@ export default function BasicTable({
                       setModalMode('registerNewRequest')
                       setShowModal(true)
                       setPhoneNumber(row.phoneNumber)
-                      setCurrentOperator('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY') //TODO: set current operator dynamically
+                      setCurrentOperator(row.operator?.walletAddress)
                     }}
                   >
                     <BellPlusIcon />

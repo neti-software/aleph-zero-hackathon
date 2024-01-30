@@ -27,7 +27,11 @@ export default function Dashboard() {
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
 
   const [tableData, setTableData] = useState<
-    { phoneNumber: string | null; accountId: string | null; operator: string | null }[]
+    {
+      phoneNumber: string | null
+      accountId: string | null
+      operator: { name: string; walletAddress: string } | null
+    }[]
   >([])
 
   const fetchData = async () => {
@@ -80,8 +84,7 @@ export default function Dashboard() {
             decodedOutput: decodedOutput4,
           } = decodeOutput(operator, contract, 'PSP34::ownerOf')
           const matchedOperator =
-            operatorData.find((operator) => operator.walletAddress === output4)?.name || null
-
+            operatorData.find((operator) => operator.walletAddress === output4) || null
           setTableData((prevData) => [
             ...prevData,
             { phoneNumber: output.Ok.Bytes, accountId: output3, operator: matchedOperator },

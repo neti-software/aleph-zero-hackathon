@@ -3,8 +3,9 @@
 import { useState } from 'react'
 
 import { ContractIds } from '@/deployments/deployments'
-import { Button, InputLabel, TextField } from '@mui/material'
+import { Button, InputLabel, MenuItem, TextField } from '@mui/material'
 import { useInkathon, useRegisteredContract } from '@scio-labs/use-inkathon'
+import operatorData from 'public/operators.json'
 import toast from 'react-hot-toast'
 
 import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
@@ -49,7 +50,6 @@ export default function RegisterRequest({
         {},
         [{ Bytes: phoneNumber }, targetOperator],
       )
-
       await contractTxWithToast(api, activeAccount.address, phoneNumberContract, 'approve', {}, [
         currentOperator,
         { Bytes: phoneNumber },
@@ -110,6 +110,7 @@ export default function RegisterRequest({
           value={targetOperator}
           required
           fullWidth
+          select
           autoFocus
           onChange={(e) => setTargetOperator(e.target.value)}
           sx={{
@@ -136,7 +137,13 @@ export default function RegisterRequest({
               },
             },
           }}
-        />
+        >
+          {operatorData.map((operator) => (
+            <MenuItem key={operator.walletAddress} value={operator.walletAddress}>
+              {operator.name}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
 
       <Button
