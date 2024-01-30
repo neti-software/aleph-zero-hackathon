@@ -58,12 +58,14 @@ function RequestForm({ onFormDataSubmit, updateIsLoading, operatorIncluded }: Re
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
+          <Typography component="h1" variant="h5" color="primary">
+            Set metadata
+          </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <InputLabel htmlFor="phoneNumber" sx={{color: '#00eac7'}}>Phone number</InputLabel>
             <TextField

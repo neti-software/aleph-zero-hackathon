@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 
-import { TablePagination } from '@mui/material'
+import { IconButton, TablePagination } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,6 +9,8 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { createTheme, styled } from '@mui/material/styles'
+import RequestModal from '../ui/request-modal'
+import { PlusCircleIcon, ReplaceIcon } from 'lucide-react'
 
 function createData(id: number, phoneNumber: string) {
   return { id, phoneNumber }
@@ -50,6 +52,8 @@ export default function BasicTable({ data }: { data: string[] }) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState(data?.length || 0)
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<'minting' | 'setting'>('minting');
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -69,6 +73,7 @@ export default function BasicTable({ data }: { data: string[] }) {
               <TableCell>Id </TableCell>
               <TableCell>Phone Numbers </TableCell>
               <TableCell>Account Id </TableCell>
+              <TableCell width='120px'>Actions</TableCell>
             </StyledTableHeaderRow>
           </TableHead>
           <TableBody>
@@ -82,6 +87,14 @@ export default function BasicTable({ data }: { data: string[] }) {
                 </TableCell>
                 <TableCell>{row}</TableCell>
                 <TableCell>-</TableCell>
+                <TableCell width='120px'>
+                  <IconButton sx={{color: '#00eac7', pl: 0}} onClick={(e) => {setModalMode('minting'); setShowModal(true);}}>
+                    <PlusCircleIcon />
+                  </IconButton>
+                  <IconButton sx={{color: '#00eac7', pl: 0}} onClick={(e) => {setModalMode('setting'); setShowModal(true);}}>
+                    <ReplaceIcon />
+                  </IconButton>
+                </TableCell>
               </StyledTableRow>
             ))}
           </TableBody>
@@ -121,6 +134,7 @@ export default function BasicTable({ data }: { data: string[] }) {
           />
         </div>
       </TableContainer>
+      <RequestModal open={showModal} mode={modalMode} onClose={() => {setShowModal(false)}}></RequestModal>
     </div>
   )
 }
