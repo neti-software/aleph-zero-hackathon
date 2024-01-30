@@ -18,19 +18,19 @@ const theme = createTheme({
 })
 
 interface RequestFormProps {
-  onFormDataSubmit: (input: string) => void
+  onFormDataSubmit: ({ input, operator }: { input: string; operator: string }) => void
   name: string
   updateIsLoading: boolean
 }
 
 function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormProps) {
   const [input, setInput] = useState('')
+  const [operator, setOperator] = useState('')
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    onFormDataSubmit(input)
+    onFormDataSubmit({ input, operator })
   }
-
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -42,11 +42,11 @@ function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormPro
           }}
         >
           <Typography component="h1" variant="h5" color="primary">
-            set {name === 'number_owner' ? 'new owner' : null}
+            set {name === 'number_owner' ? 'new owner' : 'new phone number'}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <InputLabel htmlFor={name} sx={{ color: '#00eac7' }}>
-              {name === 'number_owner' ? 'wallet address' : null}
+              {name === 'number_owner' ? 'wallet address' : 'phone number'}
             </InputLabel>
             <TextField
               margin="normal"
@@ -82,6 +82,47 @@ function RequestForm({ onFormDataSubmit, name, updateIsLoading }: RequestFormPro
                 },
               }}
             />
+            {name === 'register_phone' ? (
+              <>
+                <InputLabel htmlFor={name} sx={{ color: '#00eac7' }}>
+                  operator
+                </InputLabel>
+                <TextField
+                  margin="normal"
+                  value={operator}
+                  required
+                  fullWidth
+                  id={name}
+                  name={name}
+                  autoFocus
+                  onChange={(e) => setOperator(e.target.value)}
+                  sx={{
+                    mt: 0,
+                    input: { color: 'black' },
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    '& label.Mui-focused': {
+                      color: '#00eac7',
+                      borderRadius: '10px',
+                    },
+                    '& .MuiInput-underline:after': {
+                      borderBottomColor: '#00eac7',
+                      borderRadius: '10px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': {
+                        borderColor: '#00eac7',
+                        borderRadius: '10px',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#00eac7',
+                        borderRadius: '10px',
+                      },
+                    },
+                  }}
+                />
+              </>
+            ) : null}
 
             <Button
               type="submit"

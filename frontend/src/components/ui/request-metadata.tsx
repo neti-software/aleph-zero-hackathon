@@ -20,7 +20,7 @@ export default function RequestMetadata({
   const { contract, address: contractAddress } = useRegisteredContract(ContractIds.PhoneNumbers)
   const [updateIsLoading, setUpdateIsLoading] = useState<boolean>(false)
 
-  const handleFormData = async (newOwner: string) => {
+  const handleFormData = async ({ input, operator }: { input: string; operator: string }) => {
     if (!activeAccount || !contract || !activeSigner || !api) {
       toast.error('Wallet not connected. Try again…')
       return
@@ -28,7 +28,7 @@ export default function RequestMetadata({
     setUpdateIsLoading(true)
     try {
       await contractTxWithToast(api, activeAccount.address, contract, 'setMetadata', {}, [
-        newOwner,
+        input,
         { Bytes: phoneNumber },
       ])
       onClose()
