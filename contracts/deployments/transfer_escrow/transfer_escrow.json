@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x405c15d254019f36f89987a8c13f2867bcd529ff9fa2b0b237d7689c50a22abb",
+    "hash": "0xdcb3bf39434033ebd702d891675183f40535a4aec54acc4b6634d2c877495512",
     "language": "ink! 4.3.0",
     "compiler": "rustc 1.74.1",
     "build_info": {
@@ -74,13 +74,13 @@
         "displayName": [
           "ChainExtension"
         ],
-        "type": 22
+        "type": 23
       },
       "hash": {
         "displayName": [
           "Hash"
         ],
-        "type": 21
+        "type": 22
       },
       "maxEventTopics": 4,
       "timestamp": {
@@ -949,6 +949,16 @@
               {
                 "index": 2,
                 "name": "NotAllowed"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21,
+                    "typeName": "String"
+                  }
+                ],
+                "index": 3,
+                "name": "Panicked"
               }
             ]
           }
@@ -962,6 +972,14 @@
     },
     {
       "id": 21,
+      "type": {
+        "def": {
+          "primitive": "str"
+        }
+      }
+    },
+    {
+      "id": 22,
       "type": {
         "def": {
           "composite": {
@@ -981,7 +999,7 @@
       }
     },
     {
-      "id": 22,
+      "id": 23,
       "type": {
         "def": {
           "variant": {}

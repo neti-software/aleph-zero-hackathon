@@ -23,6 +23,7 @@ mod transfer_escrow {
         NotFound,
         Unauthorized,
         NotAllowed,
+        Panicked(String),
     }
 
     #[derive(PartialEq, scale::Decode, scale::Encode)]
@@ -88,13 +89,23 @@ mod transfer_escrow {
         #[ink(message)]
         pub fn register_new_request(&mut self, id: Id, target: AccountId) -> CallResult<()> {
             // 1. Get current owner of the phone number
-            let owner = self.phone_numbers_psp34.owner_of(id.clone()).unwrap();
-            let owner_key = String::from("owner");
+            let owner =
+                self.phone_numbers_psp34
+                    .owner_of(id.clone())
+                    .ok_or(ContractError::Panicked(
+                        "Fetching owner of phone number".into(),
+                    ))?;
+
             let user = self
                 .phone_numbers_psp34
-                .get_attribute(id.clone(), owner_key);
+                .get_attribute(id.clone(), "owner".into())
+                .ok_or(ContractError::Panicked(
+                    "Fetching attribute of phone number".into(),
+                ))?;
 
-            if Some(hex::encode(self.env().caller())) != user {
+            let caller: AccountId = self.env().caller();
+
+            if hex::encode(caller) != user {
                 return Err(ContractError::Unauthorized);
             }
 
@@ -106,9 +117,7 @@ mod transfer_escrow {
                 status: RequestStatus::PendingApprovals,
                 approvals: Default::default(),
             };
-            self.transfer_requests
-                .insert(self.next_id, &request)
-                .unwrap();
+            self.transfer_requests.insert(self.next_id, &request);
 
             self.next_id += 1;
             Ok(())
@@ -127,9 +136,9 @@ mod transfer_escrow {
                 return Err(ContractError::NotAllowed);
             }
 
-            if &self.env().caller() == &req.from {
+            if self.env().caller() == req.from {
                 req.approvals[0] = true;
-            } else if &self.env().caller() == &req.to {
+            } else if self.env().caller() == req.to {
                 req.approvals[1] = true;
             } else {
                 return Err(ContractError::Unauthorized);
@@ -139,6 +148,7 @@ mod transfer_escrow {
             if req.approvals.iter().all(|x| x == &true) {
                 req.status = RequestStatus::Ready;
             }
+            self.transfer_requests.insert(request_id, &req);
             Ok(())
         }
 
@@ -156,10 +166,12 @@ mod transfer_escrow {
             }
 
             self.phone_numbers_psp34
-                .transfer(req.to, req.token, Vec::new())
+                .transfer(req.to, req.token.clone(), Vec::new())
                 .unwrap();
 
             req.status = RequestStatus::Finalized;
+
+            self.transfer_requests.insert(request_id, &req);
 
             return Ok(());
         }
