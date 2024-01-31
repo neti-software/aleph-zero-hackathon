@@ -47,7 +47,7 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
 
 export default function TransferTable({ data }: { data: TransfersTableType[] }) {
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(100)
   const [rows, setRows] = useState(data?.length || 0)
   const [showModal, setShowModal] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
