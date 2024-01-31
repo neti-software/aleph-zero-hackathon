@@ -12,6 +12,45 @@ Our system consists of:
 
 ![Overview diagram](overview.png)
 
+Phone transfer process:
+1. End user initiates it on `transfer_escrow` contract
+   * end user must also PSP34-approve transfers of the phone number by the transfer contract
+2. Both operators must approve the transfer
+3. After approvals, any party can trigger the execution of the transfer
+
+## Quick start guide
+
+1. Add `//Alice` account to your wallet ([instruction](https://stackoverflow.com/questions/57075627/how-to-access-the-alice-account-on-a-parity-substrate-developer-chain)). This is the Central Authority account.
+2. Add `Plus` account to your wallet ([backup json to import in Polkadot.js extension](./plus-account.json); password is `password`). This is an account of one of the operators.
+3. Add `Play` account to your wallet ([backup json to import in Polkadot.js extension](./play-account.json); password is `password`). This is an account of one of the operators.
+4. Open app:
+    * go to [Demo app](https://detelco.vercel.app/) on Vercel
+    * or:
+        1. Install [pnpm](https://pnpm.io/installation) (recommended via [Node.js Corepack](https://nodejs.org/api/corepack.html) or `npm i -g pnpm`)
+        2. Run `pnpm run dev`
+
+Sample flow:
+1. Connect wallet as the Central Authority (Alice)
+2. Go to `REGISTER NEW NUMBER` page, enter any phone number and choose `Plus` as the operator. You'll be asked to sign 2 transactions.
+3. Open page in new tab and connect wallet as the `Plus` account (see import file in **Quick start guide**)
+4. Go to `PHONE NUMBERS` page, find the number created by CA (you may need to select higher number of rows per page to see it) and click the `+` icon
+5. This assignes given phone number to specific end user - provide some wallet address that you own - NOT Alice and not Operators.
+6. After transaction is confirmed, switch the connected wallet account to the end user.
+7. Click the bell-with-a-plus icon and select `Play` as the operator you want to transfer to. This initiates process of transferring your number to new operator.
+8. Switch the connected wallet account to `Plus` account and go to `TRANSFER REQUESTS` page
+9. Find the new transfer request and click the checkmark button - this will approve the request as `Plus`
+10. Do steps 8. and 9. again but as `Play` account
+11. Refresh the page, connect as `Plus` and go to `TRANSFER REQUESTS` again. You will now see that the status of the transfer request is `READY`
+12. Click the action button for the transfer. This will execute the transfer, making `Play` the new operator of this phone number.
+
+## Testnet Deployment
+
+Contracts are deployed on Aleph Zero Testnet.
+
+* `phone_numbers`: `5CsNRcrtZ1XySxdpTWC45vaRS9U11PDjePqDh52YNB4boubU`
+* `transfer_escrow`: `5E1JJRDqCH3g8ku5nND5umxqEa1onVuEaH9VU6zeWqe885Gw`
+
+
 # ink!athon Boilerplate
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -41,6 +80,8 @@ Other projects include:
 
 - [DeTelco](#detelco)
   - [Overview](#overview)
+  - [Quick start guide](#quick-start-guide)
+  - [Testnet Deployment](#testnet-deployment)
 - [ink!athon Boilerplate](#inkathon-boilerplate)
   - [About 📖](#about-)
   - [Getting started 🚀](#getting-started-)
