@@ -1,4 +1,16 @@
-![inkathon Devtooling Banner](inkathon-devtooling-banner.png)
+# DeTelco
+
+## Overview
+
+Problem: transferring phone numbers between operators is an opaque and unreliable process. We've personally been hit with issues like old operator deactivating phone number in old system, new operator not activating on new system and phone number being reassigned to someone else (!) before problem could be solved. Our proposal decentralizes the phone number transfer process, preventing such issues in a trustless way.
+
+Our system consists of:
+* Central Authorithies - accounts representing government actors responsible for initial assignment of phone number pools to operators
+* Operators - accounts representing telcos
+* Phone Numbers - [PSP34](https://github.com/w3f/PSPs/blob/master/PSPs/psp-34.md) NFTs that represent phone numbers - owned and managed by Operators
+* End users - accounts representing people that actually use phone numbers - stored in NFTs using PSP34Metadata extension
+
+![Overview diagram](overview.png)
 
 # ink!athon Boilerplate
 
@@ -27,24 +39,27 @@ Other projects include:
 
 **Table of Contents:**
 
-1. [About 📖](#about-)
-2. [Getting started 🚀](#getting-started-)
-   1. [1. Run the frontend](#1-run-the-frontend)
-   2. [2. Build \& deploy contracts on a local node](#2-build--deploy-contracts-on-a-local-node)
-   3. [3. Connect the frontend to the local node](#3-connect-the-frontend-to-the-local-node)
-3. [Customization 🎨](#customization-)
-   1. [1. Project Name](#1-project-name)
-   2. [2. Custom Contracts](#2-custom-contracts)
-   3. [3. Custom Scripts](#3-custom-scripts)
-4. [The Stack 🥞](#the-stack-)
-5. [Live Examples 🌐](#live-examples-)
-6. [Deployment 🚢](#deployment-)
-   1. [Environment Variables](#environment-variables)
-   2. [Contract Deployment](#contract-deployment)
-7. [VSCode Setup 🛠](#vscode-setup-)
-   1. [Workspace](#workspace)
-   2. [Plugins](#plugins)
-8. [FAQs \& Troubleshooting 💬](#faqs--troubleshooting-)
+- [DeTelco](#detelco)
+  - [Overview](#overview)
+- [ink!athon Boilerplate](#inkathon-boilerplate)
+  - [About 📖](#about-)
+  - [Getting started 🚀](#getting-started-)
+    - [1. Run the frontend](#1-run-the-frontend)
+    - [2. Build \& deploy contracts on a local node](#2-build--deploy-contracts-on-a-local-node)
+    - [3. Connect the frontend to the local node](#3-connect-the-frontend-to-the-local-node)
+  - [Customization 🎨](#customization-)
+    - [1. Project Name](#1-project-name)
+    - [2. Custom Contracts](#2-custom-contracts)
+    - [3. Custom Scripts](#3-custom-scripts)
+  - [The Stack 🥞](#the-stack-)
+  - [Live Examples 🌐](#live-examples-)
+  - [Deployment 🚢](#deployment-)
+    - [Environment Variables](#environment-variables)
+    - [Contract Deployment](#contract-deployment)
+  - [VSCode Setup 🛠](#vscode-setup-)
+    - [Workspace](#workspace)
+    - [Plugins](#plugins)
+  - [FAQs \& Troubleshooting 💬](#faqs--troubleshooting-)
 
 ---
 
