@@ -79,9 +79,9 @@ function ResponsiveAppBar() {
 
   const items = React.useMemo(() => {
     return [
-      { label: 'NUMBER PHONE', href: '/dashboard' },
-      userType === 'owner' && { label: 'REGISTER PHONE', href: '/register-phone' },
-      userType != 'owner' && { label: 'TRANSFER REQUEST', href: '/transfer-request' },
+      { label: 'PHONE NUMBERS', href: '/dashboard' },
+      userType === 'owner' && { label: 'REGISTER NEW NUMBER', href: '/register-phone' },
+      userType != 'owner' && { label: 'TRANSFER REQUESTS', href: '/transfer-request' },
     ].filter((v) => v)
   }, [userType])
 
